@@ -2,7 +2,11 @@
     "name": "MakeCode-Arcade-Template",
     "description": "",
     "dependencies": {
-        "device": "*"
+        "device": "*",
+        "arcade-minimap": "github:microsoft/arcade-minimap#v0.6.1",
+        "Sprite Grid": "github:microsoft/arcade-grid#v1.3.0",
+        "arcade-story": "github:microsoft/arcade-storytelling#v1.0.3",
+        "pxt-circuit-playground-character-icons": "github:adafruit/circuit-playground-character-icons#v0.0.8"
     },
     "files": [
         "main.blocks",
@@ -11,13 +15,15 @@
         "assets.json",
         "images.g.jres",
         "images.g.ts",
-        "main.py"
+        "main.py",
+        "tilemap.g.jres",
+        "tilemap.g.ts"
     ],
     "testFiles": [
         "test.ts"
     ],
     "targetVersions": {
-        "target": "2.0.62",
+        "target": "2.0.63",
         "targetId": "arcade"
     },
     "supportedTargets": [
