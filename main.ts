@@ -24,6 +24,7 @@ controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
 })
 function recogerDiario () {
     sprites.destroy(diario)
+    music.play(music.melodyPlayable(music.baDing), music.PlaybackMode.UntilDone)
     diarioEncontrado = true
     game.showLongText("¡Encontraste el diario!", DialogLayout.Bottom)
 }
@@ -79,24 +80,21 @@ function hablarConHerrero () {
             }
         }
     } else if (minerales_recogidos >= 3) {
+        music.play(music.melodyPlayable(music.baDing), music.PlaybackMode.UntilDone)
         game.showLongText("Herrero: ¡Tienes todos los minerales!", DialogLayout.Bottom)
         misionHerreroActiva = false
         hablandoConHerrero = 5
         pause(500)
         game.showLongText("Herrero: Con esto reparo mi martillo...", DialogLayout.Bottom)
-        pause(500)
         game.showLongText("Mi abuelo forjó una caja especial. Para el Alquimista Valerio.", DialogLayout.Bottom)
-        pause(500)
         game.showLongText("Tenía tres cerraduras mágicas...", DialogLayout.Bottom)
-        pause(500)
         game.showLongText("Yo guardo la primera llave.", DialogLayout.Bottom)
-        pause(500)
         game.showLongText("La segunda está con Lyra.", DialogLayout.Bottom)
+        game.showLongText("Ve a verla en el bosque.", DialogLayout.Bottom)
         puede_hablar_lyra = true
     } else if (randint(0, 100) < 50) {
-        game.showLongText("Herrero: ¿Ya miraste cerca del puente?", DialogLayout.Bottom)
-        game.showLongText("También busca entre las rocas.", DialogLayout.Bottom)
-        game.showLongText("Y al fondo donde el agua es más profunda.", DialogLayout.Bottom)
+        game.showLongText("Herrero: ¿Ya miraste dentro de la mazmorra?", DialogLayout.Bottom)
+        game.showLongText("Allí deben estar.", DialogLayout.Bottom)
     } else {
         game.showLongText("Herrero: ¿Ya encontraste los minerales?", DialogLayout.Bottom)
     }
@@ -147,6 +145,7 @@ function hablarConSabio () {
             }
         }
     } else if (diarioEncontrado == true) {
+        music.play(music.melodyPlayable(music.baDing), music.PlaybackMode.UntilDone)
         game.showLongText("Sabio: ¡Lo encontrase!", DialogLayout.Bottom)
         misionSabioActiva = false
         hablandoConSabio = 5
@@ -449,6 +448,7 @@ function crearMapa () {
 function recogerMinerales () {
     if (objeto == mineral1 || (objeto == mineral2 || objeto == mineral3)) {
         sprites.destroy(objeto)
+        music.play(music.melodyPlayable(music.baDing), music.PlaybackMode.UntilDone)
         minerales_recogidos = minerales_recogidos + 1
         game.showLongText("¡Mineral" + minerales_recogidos + "/3!", DialogLayout.Bottom)
     }
@@ -472,7 +472,7 @@ function crearMinerales () {
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
         `, SpriteKind.Loot)
-    tiles.placeOnTile(mineral1, tiles.getTileLocation(12, 20))
+    tiles.placeOnTile(mineral1, tiles.getTileLocation(23, 2))
     mineral2 = sprites.create(img`
         . . . . . . . . c c c c . . . . 
         . . . . c c c c c c c c c . . . 
@@ -491,7 +491,7 @@ function crearMinerales () {
         . . . . c b b a a 6 b c . . . . 
         . . . . . . b 6 6 c c . . . . . 
         `, SpriteKind.Loot)
-    tiles.placeOnTile(mineral2, tiles.getTileLocation(12, 10))
+    tiles.placeOnTile(mineral2, tiles.getTileLocation(37, 7))
     mineral3 = sprites.create(img`
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . c c c c . . 
@@ -510,7 +510,7 @@ function crearMinerales () {
         . . . . . c a 6 6 b c . . . . . 
         . . . . . . . c c c . . . . . . 
         `, SpriteKind.Loot)
-    tiles.placeOnTile(mineral3, tiles.getTileLocation(12, 18))
+    tiles.placeOnTile(mineral3, tiles.getTileLocation(13, 10))
 }
 let casaHerrero: Sprite = null
 let arbol2: Sprite = null
