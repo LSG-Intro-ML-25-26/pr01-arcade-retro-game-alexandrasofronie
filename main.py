@@ -27,9 +27,62 @@ def on_down_pressed():
         False)
 controller.down.on_event(ControllerButtonEvent.PRESSED, on_down_pressed)
 
+def hablarConLyra():
+    global hablandoConLyra, respuesta, misionLyraActiva
+    monstruos_matados = 0
+    if puede_hablar_lyra == False:
+        game.show_long_text("Lyra: Habla con el herrero Bron primero.",
+            DialogLayout.BOTTOM)
+        game.show_long_text("El te dirá cuando tienes que volver por aquí.",
+            DialogLayout.BOTTOM)
+        return
+    if misionLyraActiva == False:
+        if hablandoConLyra == 0:
+            game.show_long_text("", DialogLayout.BOTTOM)
+            hablandoConLyra = 1
+        elif hablandoConLyra == 1:
+            game.show_long_text("", DialogLayout.BOTTOM)
+            hablandoConLyra = 2
+        elif hablandoConLyra == 2:
+            respuesta = game.ask("SI", "NO")
+            if respuesta:
+                misionLyraActiva = True
+                hablandoConLyra = 3
+                crearMinerales()
+            else:
+                game.show_long_text("", DialogLayout.BOTTOM)
+                hablandoConLyra = 4
+        elif hablandoConLyra == 3:
+            game.show_long_text("", DialogLayout.BOTTOM)
+        else:
+            if hablandoConLyra == 4:
+                game.show_long_text("", DialogLayout.BOTTOM)
+                hablandoConLyra = 2
+            if hablandoConLyra == 5:
+                game.show_long_text("", DialogLayout.BOTTOM)
+    elif monstruos_matados >= 10:
+        music.play(music.melody_playable(music.ba_ding),
+            music.PlaybackMode.UNTIL_DONE)
+        game.show_long_text("", DialogLayout.BOTTOM)
+        misionLyraActiva = False
+        hablandoConLyra = 5
+        pause(500)
+        game.show_long_text("", DialogLayout.BOTTOM)
+        game.show_long_text("", DialogLayout.BOTTOM)
+        game.show_long_text("", DialogLayout.BOTTOM)
+        game.show_long_text("", DialogLayout.BOTTOM)
+        game.show_long_text("", DialogLayout.BOTTOM)
+        game.show_long_text("", DialogLayout.BOTTOM)
+    elif randint(0, 100) < 50:
+        game.show_long_text("", DialogLayout.BOTTOM)
+        game.show_long_text("", DialogLayout.BOTTOM)
+    else:
+        game.show_long_text("", DialogLayout.BOTTOM)
 def recogerDiario():
     global diarioEncontrado
     sprites.destroy(diario)
+    music.play(music.melody_playable(music.ba_ding),
+        music.PlaybackMode.UNTIL_DONE)
     diarioEncontrado = True
     game.show_long_text("¡Encontraste el diario!", DialogLayout.BOTTOM)
 
@@ -56,7 +109,6 @@ def hablarConHerrero():
     if puede_hablar_herrero == False:
         game.show_long_text("Herrero Bron: Habla con el sabio Aleron primero.",
             DialogLayout.BOTTOM)
-        pause(500)
         game.show_long_text("El te dará una buena razón para estar aquí.",
             DialogLayout.BOTTOM)
         return
@@ -78,7 +130,7 @@ def hablarConHerrero():
                 game.show_long_text("Herrero: Otro día entonces...", DialogLayout.BOTTOM)
                 hablandoConHerrero = 4
         elif hablandoConHerrero == 3:
-            game.show_long_text("Herrero: ¡Perfecto! Busca 3 minerales.",
+            game.show_long_text("Herrero: ¡Perfecto! Busca 3 minerales. Están cerca de la playa.",
                 DialogLayout.BOTTOM)
         else:
             if hablandoConHerrero == 4:
@@ -87,28 +139,25 @@ def hablarConHerrero():
             if hablandoConHerrero == 5:
                 game.show_long_text("Herrero: Gracias por tu ayuda.", DialogLayout.BOTTOM)
     elif minerales_recogidos >= 3:
+        music.play(music.melody_playable(music.ba_ding),
+            music.PlaybackMode.UNTIL_DONE)
         game.show_long_text("Herrero: ¡Tienes todos los minerales!", DialogLayout.BOTTOM)
         misionHerreroActiva = False
         hablandoConHerrero = 5
         pause(500)
         game.show_long_text("Herrero: Con esto reparo mi martillo...",
             DialogLayout.BOTTOM)
-        pause(500)
         game.show_long_text("Mi abuelo forjó una caja especial. Para el Alquimista Valerio.",
             DialogLayout.BOTTOM)
-        pause(500)
         game.show_long_text("Tenía tres cerraduras mágicas...", DialogLayout.BOTTOM)
-        pause(500)
         game.show_long_text("Yo guardo la primera llave.", DialogLayout.BOTTOM)
-        pause(500)
         game.show_long_text("La segunda está con Lyra.", DialogLayout.BOTTOM)
+        game.show_long_text("Ve a verla en el bosque.", DialogLayout.BOTTOM)
         puede_hablar_lyra = True
     elif randint(0, 100) < 50:
-        game.show_long_text("Herrero: ¿Ya miraste cerca del puente?",
+        game.show_long_text("Herrero: ¿Ya miraste dentro de la mazmorra?",
             DialogLayout.BOTTOM)
-        game.show_long_text("También busca entre las rocas.", DialogLayout.BOTTOM)
-        game.show_long_text("Y al fondo donde el agua es más profunda.",
-            DialogLayout.BOTTOM)
+        game.show_long_text("Allí deben estar.", DialogLayout.BOTTOM)
     else:
         game.show_long_text("Herrero: ¿Ya encontraste los minerales?",
             DialogLayout.BOTTOM)
@@ -159,40 +208,39 @@ def hablarConSabio():
                 game.show_long_text("Sabio: Gracias nuevamente por tu ayuda.",
                     DialogLayout.BOTTOM)
     elif diarioEncontrado == True:
+        music.play(music.melody_playable(music.ba_ding),
+            music.PlaybackMode.UNTIL_DONE)
         game.show_long_text("Sabio: ¡Lo encontrase!", DialogLayout.BOTTOM)
         misionSabioActiva = False
         hablandoConSabio = 5
         pause(500)
         game.show_long_text("Sabio: Este diario... habla de mi maestro.",
             DialogLayout.BOTTOM)
-        pause(500)
         game.show_long_text("El Alquimista Valerio desapareció hace años...",
             DialogLayout.BOTTOM)
-        pause(500)
         game.show_long_text("El Alquimista dejó tres llaves ocultas.",
             DialogLayout.BOTTOM)
-        pause(500)
         game.show_long_text("La primera está con el herrero Bron.", DialogLayout.BOTTOM)
-        pause(500)
         game.show_long_text("Ve a verlo. Está al otro lado del pueblo.",
             DialogLayout.BOTTOM)
         puede_hablar_herrero = True
     elif randint(0, 100) < 50:
         game.show_long_text("Sabio: ¿Ya miraste al fondo del bosque?",
             DialogLayout.BOTTOM)
-        pause(800)
         game.show_long_text("Donde están los robles más grandes...", DialogLayout.BOTTOM)
-        pause(800)
         game.show_long_text("Allí debe estar.", DialogLayout.BOTTOM)
     else:
         game.show_long_text("Sabio: ¿Ya lo encontrase?", DialogLayout.BOTTOM)
 def crearMapa():
-    global misionSabioActiva, hablandoConSabio, diarioEncontrado, sabio, nena, herrero, casaSabio, arbol1, arbol2, casaHerrero
+    global misionSabioActiva, hablandoConSabio, diarioEncontrado, sabio, lyra, nena, herrero, casaSabio, arbol1, arbol2, arbol3, casaHerrero
     misionSabioActiva = False
     hablandoConSabio = 0
     diarioEncontrado = False
     sabio = sprites.create(assets.image("""
         sabio
+        """), SpriteKind.NPC)
+    lyra = sprites.create(assets.image("""
+        lyra
         """), SpriteKind.NPC)
     nena = sprites.create(assets.image("""
         nena-front
@@ -290,6 +338,10 @@ def crearMapa():
             miImagen0
             """),
         SpriteKind.Decoracion)
+    arbol3 = sprites.create(assets.image("""
+            swampTree1
+            """),
+        SpriteKind.Decoracion)
     casaHerrero = sprites.create(img("""
             ....................e4e44e4e....................
             .................444eee44e4e444.................
@@ -349,9 +401,11 @@ def crearMapa():
     tiles.place_on_tile(casaSabio, tiles.get_tile_location(3, 1))
     tiles.place_on_tile(herrero, tiles.get_tile_location(14, 3))
     tiles.place_on_tile(casaHerrero, tiles.get_tile_location(14, 1))
+    tiles.place_on_tile(lyra, tiles.get_tile_location(3, 21))
     tiles.place_on_tile(nena, tiles.get_tile_location(3, 5))
     tiles.place_on_tile(arbol1, tiles.get_tile_location(12, 21))
     tiles.place_on_tile(arbol2, tiles.get_tile_location(10, 21))
+    tiles.place_on_tile(arbol3, tiles.get_tile_location(2, 21))
     scene.camera_follow_sprite(nena)
     scene.set_background_image(img("""
         7777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777
@@ -477,9 +531,10 @@ def crearMapa():
         """))
 def recogerMinerales():
     global minerales_recogidos
-    minerales_recogidos = 0
     if objeto == mineral1 or (objeto == mineral2 or objeto == mineral3):
         sprites.destroy(objeto)
+        music.play(music.melody_playable(music.ba_ding),
+            music.PlaybackMode.UNTIL_DONE)
         minerales_recogidos = minerales_recogidos + 1
         game.show_long_text("¡Mineral" + str(minerales_recogidos) + "/3!",
             DialogLayout.BOTTOM)
@@ -504,7 +559,7 @@ def crearMinerales():
             . . . . . . . . . . . . . . . .
             """),
         SpriteKind.Loot)
-    tiles.place_on_tile(mineral1, tiles.get_tile_location(12, 20))
+    tiles.place_on_tile(mineral1, tiles.get_tile_location(23, 2))
     mineral2 = sprites.create(img("""
             . . . . . . . . c c c c . . . .
             . . . . c c c c c c c c c . . .
@@ -524,7 +579,7 @@ def crearMinerales():
             . . . . . . b 6 6 c c . . . . .
             """),
         SpriteKind.Loot)
-    tiles.place_on_tile(mineral2, tiles.get_tile_location(12, 10))
+    tiles.place_on_tile(mineral2, tiles.get_tile_location(37, 7))
     mineral3 = sprites.create(img("""
             . . . . . . . . . . . . . . . .
             . . . . . . . . . . c c c c . .
@@ -544,24 +599,28 @@ def crearMinerales():
             . . . . . . . c c c . . . . . .
             """),
         SpriteKind.Loot)
-    tiles.place_on_tile(mineral3, tiles.get_tile_location(12, 18))
+    tiles.place_on_tile(mineral3, tiles.get_tile_location(13, 10))
 casaHerrero: Sprite = None
+arbol3: Sprite = None
 arbol2: Sprite = None
 arbol1: Sprite = None
 casaSabio: Sprite = None
+lyra: Sprite = None
 hablandoConSabio = 0
 misionSabioActiva = False
 objeto: Sprite = None
 mineral3: Sprite = None
 mineral2: Sprite = None
 mineral1: Sprite = None
-puede_hablar_lyra = False
-respuesta = False
 hablandoConHerrero = 0
 minerales_recogidos = 0
 misionHerreroActiva = False
 puede_hablar_herrero = False
 diarioEncontrado = False
+respuesta = False
+hablandoConLyra = 0
+misionLyraActiva = False
+puede_hablar_lyra = False
 nena: Sprite = None
 diario: Sprite = None
 herrero: Sprite = None

@@ -8,6 +8,8 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.NPC, function (sprite, otherSpri
         hablarConSabio()
     } else if (otherSprite == herrero) {
         hablarConHerrero()
+    } else if (otherSprite == lyra) {
+        hablarConLyra()
     }
 })
 function crearDiario () {
@@ -22,6 +24,62 @@ controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
     false
     )
 })
+function crearMonstruos () {
+	
+}
+function hablarConLyra () {
+    let monstruos_matados = 0
+    if (puede_hablar_lyra == false) {
+        game.showLongText("Lyra: Habla con el herrero Bron primero.", DialogLayout.Bottom)
+        game.showLongText("El te dirá cuando tienes que volver por aquí.", DialogLayout.Bottom)
+        return
+    }
+    if (misionLyraActiva == false) {
+        if (hablandoConLyra == 0) {
+            game.showLongText("Lyra: ¡Hola! Soy Lyra, la guardiana del bosque.", DialogLayout.Bottom)
+            game.showLongText("Lyra: El lago está lleno de criaturas peligrosas.", DialogLayout.Bottom)
+            hablandoConLyra = 1
+        } else if (hablandoConLyra == 1) {
+            game.showLongText("Lyra: ¿Podrías ayudarme a eliminar 10 de ellas?", DialogLayout.Bottom)
+            hablandoConLyra = 2
+        } else if (hablandoConLyra == 2) {
+            respuesta = game.ask("SÍ, te ayudo", "NO, tengo miedo")
+            if (respuesta) {
+                misionLyraActiva = true
+                game.showLongText("Lyra: ¡Gracias! Usa el botón A para disparar.", DialogLayout.Bottom)
+                hablandoConLyra = 3
+                crearMonstruos()
+            } else {
+                game.showLongText("Lyra: Entiendo... vuelve cuando estés listo.", DialogLayout.Bottom)
+                hablandoConLyra = 4
+            }
+        } else if (hablandoConLyra == 3) {
+            game.showLongText("Lyra: Elimina 10 criaturas y vuelve a verme.", DialogLayout.Bottom)
+        } else {
+            if (hablandoConLyra == 4) {
+                game.showLongText("Lyra: ¿Has cambiado de opinión?", DialogLayout.Bottom)
+                hablandoConLyra = 2
+            }
+            if (hablandoConLyra == 5) {
+                game.showLongText("Lyra: Gracias por limpiar el bosque.", DialogLayout.Bottom)
+            }
+        }
+    } else if (monstruos_matados >= 10) {
+        music.play(music.melodyPlayable(music.baDing), music.PlaybackMode.UntilDone)
+        game.showLongText("Lyra: ¡Increíble! Has eliminado 10 criaturas.", DialogLayout.Bottom)
+        misionLyraActiva = false
+        hablandoConLyra = 5
+        pause(500)
+        game.showLongText("Lyra: Como prometí, aquí tienes la llave.", DialogLayout.Bottom)
+        game.showLongText("Lyra: Esta es la segunda llave del cofre del Alquimista.", DialogLayout.Bottom)
+        game.showLongText("Lyra: La tercera cerca del lago..", DialogLayout.Bottom)
+    } else if (randint(0, 100) < 50) {
+        game.showLongText("Lyra: ¿Cómo va la caza?", DialogLayout.Bottom)
+        game.showLongText("Lyra: Llevas " + monstruos_matados + "/10 criaturas.", DialogLayout.Bottom)
+    } else {
+        game.showLongText("Lyra: Las criaturas aparecen por todo el bosque.", DialogLayout.Bottom)
+    }
+}
 function recogerDiario () {
     sprites.destroy(diario)
     music.play(music.melodyPlayable(music.baDing), music.PlaybackMode.UntilDone)
@@ -47,7 +105,6 @@ controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
 function hablarConHerrero () {
     if (puede_hablar_herrero == false) {
         game.showLongText("Herrero Bron: Habla con el sabio Aleron primero.", DialogLayout.Bottom)
-        pause(500)
         game.showLongText("El te dará una buena razón para estar aquí.", DialogLayout.Bottom)
         return
     }
@@ -88,9 +145,9 @@ function hablarConHerrero () {
         game.showLongText("Herrero: Con esto reparo mi martillo...", DialogLayout.Bottom)
         game.showLongText("Mi abuelo forjó una caja especial. Para el Alquimista Valerio.", DialogLayout.Bottom)
         game.showLongText("Tenía tres cerraduras mágicas...", DialogLayout.Bottom)
-        game.showLongText("Yo guardo la primera llave.", DialogLayout.Bottom)
+        game.showLongText("Yo guardo la primera llave. Ahora es tuya.", DialogLayout.Bottom)
         game.showLongText("La segunda está con Lyra.", DialogLayout.Bottom)
-        game.showLongText("Ve a verla en el bosque.", DialogLayout.Bottom)
+        game.showLongText("Ve a verla en el bosque para conseguir la llave.", DialogLayout.Bottom)
         puede_hablar_lyra = true
     } else if (randint(0, 100) < 50) {
         game.showLongText("Herrero: ¿Ya miraste dentro de la mazmorra?", DialogLayout.Bottom)
@@ -151,20 +208,14 @@ function hablarConSabio () {
         hablandoConSabio = 5
         pause(500)
         game.showLongText("Sabio: Este diario... habla de mi maestro.", DialogLayout.Bottom)
-        pause(500)
         game.showLongText("El Alquimista Valerio desapareció hace años...", DialogLayout.Bottom)
-        pause(500)
         game.showLongText("El Alquimista dejó tres llaves ocultas.", DialogLayout.Bottom)
-        pause(500)
         game.showLongText("La primera está con el herrero Bron.", DialogLayout.Bottom)
-        pause(500)
         game.showLongText("Ve a verlo. Está al otro lado del pueblo.", DialogLayout.Bottom)
         puede_hablar_herrero = true
     } else if (randint(0, 100) < 50) {
         game.showLongText("Sabio: ¿Ya miraste al fondo del bosque?", DialogLayout.Bottom)
-        pause(800)
         game.showLongText("Donde están los robles más grandes...", DialogLayout.Bottom)
-        pause(800)
         game.showLongText("Allí debe estar.", DialogLayout.Bottom)
     } else {
         game.showLongText("Sabio: ¿Ya lo encontrase?", DialogLayout.Bottom)
@@ -175,6 +226,7 @@ function crearMapa () {
     hablandoConSabio = 0
     diarioEncontrado = false
     sabio = sprites.create(assets.image`sabio`, SpriteKind.NPC)
+    lyra = sprites.create(assets.image`lyra`, SpriteKind.NPC)
     nena = sprites.create(assets.image`nena-front`, SpriteKind.Player)
     herrero = sprites.create(assets.image`herrero`, SpriteKind.NPC)
     casaSabio = sprites.create(img`
@@ -262,6 +314,7 @@ function crearMapa () {
         ....eee....e......e...eee.ccee..
         `, SpriteKind.Decoracion)
     arbol2 = sprites.create(assets.image`miImagen0`, SpriteKind.Decoracion)
+    arbol3 = sprites.create(assets.image`swampTree1`, SpriteKind.Decoracion)
     casaHerrero = sprites.create(img`
         ....................e4e44e4e....................
         .................444eee44e4e444.................
@@ -318,9 +371,11 @@ function crearMapa () {
     tiles.placeOnTile(casaSabio, tiles.getTileLocation(3, 1))
     tiles.placeOnTile(herrero, tiles.getTileLocation(14, 3))
     tiles.placeOnTile(casaHerrero, tiles.getTileLocation(14, 1))
+    tiles.placeOnTile(lyra, tiles.getTileLocation(3, 21))
     tiles.placeOnTile(nena, tiles.getTileLocation(3, 5))
     tiles.placeOnTile(arbol1, tiles.getTileLocation(12, 21))
     tiles.placeOnTile(arbol2, tiles.getTileLocation(10, 21))
+    tiles.placeOnTile(arbol3, tiles.getTileLocation(2, 21))
     scene.cameraFollowSprite(nena)
     scene.setBackgroundImage(img`
         7777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777
@@ -513,6 +568,7 @@ function crearMinerales () {
     tiles.placeOnTile(mineral3, tiles.getTileLocation(13, 10))
 }
 let casaHerrero: Sprite = null
+let arbol3: Sprite = null
 let arbol2: Sprite = null
 let arbol1: Sprite = null
 let casaSabio: Sprite = null
@@ -522,15 +578,18 @@ let objeto: Sprite = null
 let mineral3: Sprite = null
 let mineral2: Sprite = null
 let mineral1: Sprite = null
-let puede_hablar_lyra = false
-let respuesta = false
 let hablandoConHerrero = 0
 let minerales_recogidos = 0
 let misionHerreroActiva = false
 let puede_hablar_herrero = false
 let diarioEncontrado = false
+let respuesta = false
+let hablandoConLyra = 0
+let misionLyraActiva = false
+let puede_hablar_lyra = false
 let nena: Sprite = null
 let diario: Sprite = null
+let lyra: Sprite = null
 let herrero: Sprite = null
 let sabio: Sprite = null
 scene.setBackgroundImage(img`

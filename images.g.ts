@@ -22,50 +22,6 @@ f f f c 3 c c c c 3 c f f f
 . . . . f f f f f f . . . . 
 . . . . f f . . f f . . . . 
 `;
-            case "image4":
-            case "arbol":return img`
-................86..................
-...........6688867886...............
-...........8666877688868............
-............868777767768............
-.........688667777776688............
-........67767777777778666...........
-.........6776667767666868...........
-..........866667667677688...........
-.........8666666666667778...........
-........667766666666666676..........
-.......67766667666776667776.........
-......886667776676777666688.........
-.....67766777667767777666768........
-....6776666666777667776666776.......
-.....8667776667766676677776776......
-......8777666666667776777776688.....
-....6887766776677677777777776776....
-..8866666677767777777777766666778...
-.86666666777667767777766666776668...
-..88677666666777677677666667776668..
-..86776677666666666666667776666668..
-886666677766667666666776677766668...
-6668666676667766767767766677666668..
-88866666666777677677667666666776668.
-.86668866666766776776666667766666668
-.86688666666666776666667667776666688
-.668866666666666666666677666666688..
-..8866686666666666677667776666668...
-...866886666666666677667776666668...
-...86886668666666667666666666888....
-....88866886686666666666666668......
-......86886668666866668666868.......
-......88866688668866688866888.......
-........8888888688888ce868..........
-..............e88e88.ec.8...........
-...............eeee..e..............
-...............ceef.ce..............
-...............ceefcec..............
-...............feefce...............
-...............fceeec...............
-...............ffceec...............
-`;
             case "image3":
             case "miImagen":return img`
 . . . . . . . . . . . . . . . . 
@@ -84,25 +40,6 @@ f f f c 3 c c c c 3 c f f f
 . . . . e e f 5 5 4 4 f . . . . 
 . . . . . f f f f f f f . . . . 
 . . . . . . . . . f f f . . . . 
-`;
-            case "image2":
-            case "sabio":return img`
-. . . . . . . c c c . . . . . . 
-. . . . . . c b 5 c . . . . . . 
-. . . . c c c 5 5 c c c . . . . 
-. . c c b c 5 5 5 5 c c c c . . 
-. c b b 5 b 5 5 5 5 b 5 b b c . 
-. c b 5 5 b b 5 5 b b 5 5 b c . 
-. . f 5 5 5 b b b b 5 5 5 c . . 
-. . f f 5 5 5 5 5 5 5 5 f f . . 
-. . f f f b f e e f b f f f . . 
-. . f f f 1 f b b f 1 f f f . . 
-. . . f f b b b b b b f f . . . 
-. . . e e f e e e e f e e . . . 
-. . e b c b 5 b b 5 b f b e . . 
-. . e e f 5 5 5 5 5 5 f e e . . 
-. . . . c b 5 5 5 5 b c . . . . 
-. . . . . f f f f f f . . . . . 
 `;
             case "image5":
             case "miImagen0":return img`
@@ -158,15 +95,6 @@ f f f c 3 c c c c 3 c f f f
 . . . f c c f f f f f f . . . . 
 . . . . f f . . . f f f . . . . 
 `;
-            case "image7":
-            case "mineral":return img`
-. . . . 6 6 . . 
-. . . . 1 4 6 . 
-. . 4 . . 4 1 6 
-c b b 4 4 4 d c 
-. c b b 4 d c . 
-. . c c c c . . 
-`;
             case "image9":
             case "diario":return img`
 . . . e e e e e e e e e . . . . 
@@ -186,51 +114,70 @@ c b b 4 4 4 d c
 . . . . . . . . . . . . . . . . 
 . . . . . . . . . . . . . . . . 
 `;
-            case "image6":
-            case "bridge":return img`
-.eeee..............eeee.
-eeddee............eeddee
-edbbde............edbbde
-edbbdeeeeeeeeeeeeeedbbde
-feddeebbbbbbbbbbbbfeddee
-feeeefbbbbbbbbbbbbfeeeef
-feeeefeebbbbbbbbeefeeeef
-eeddeffeeeeeeeeeeffeddee
-edbbdeffeeeeeeeeffedbbde
-edbbdebbbbbbbbbbbbedbbde
-feddeebbbbbbbbbbbbfeddee
-feeeefeebbbbbbbbeefeeeef
-feeeeffeeeeeeeeeeffeeeef
-eeddeeffeeeeeeeeffeeddee
-edbbdebbbbbbbbbbbbedbbde
-edbbdebbbbbbbbbbbbedbbde
-feddeeeebbbbbbbbeefeddee
-feeeeffeeeeeeeeeeffeeeef
-feeeefffeeeeeeeefffeeeef
-eeddeebbbbbbbbbbbbeeddee
-edbbdebbbbbbbbbbbbedbbde
-edbbdeeebbbbbbbbeeedbbde
-feddeefeeeeeeeeeeffeddee
-feeeefffeeeeeeeefffeeeef
-feeeefbbbbbbbbbbbbfeeeef
-eeddeebbbbbbbbbbbbeeddee
-edbbdeeebbbbbbbbeeedbbde
-edbbdefeeeeeeeeeefedbbde
-feddeeffeeeeeeeefffeddee
-feeeefbbbbbbbbbbbbfeeeef
-feeeefbbbbbbbbbbbbfeeeef
-eeddeeeebbbbbbbbeeeeddee
-edbbdefeeeeeeeeeefedbbde
-edbbdeffeeeeeeeeffedbbde
-feddeebbbbbbbbbbbbfeddee
-feeeefbbbbbbbbbbbbfeeeef
-fbeeefeebbbbbbbbeefbeeef
-fbbffffeeeeeeeeeeffbbfff
-febbbefffffffffffffebbbe
-feefff666666666666feefff
-feeeef666666666666feeeef
-eeeeef............eeeeef
-.eeff..............eeff.
+            case "image2":
+            case "lyra":return img`
+. . . . . . . . . . . . . . . . 
+. . . . . f f f f f f . . . . . 
+. . . . f 1 1 1 1 1 6 f . . . . 
+. . . f 1 6 6 6 6 6 1 6 f . . . 
+. . . f 6 6 f f f f 6 1 f . . . 
+. . . f 6 f f d d f f 6 f . . . 
+. . f 6 f d f d d f d f 6 f . . 
+. . f 6 f d 3 d d 3 d f 6 f . . 
+. . f 6 6 f d d d d f 6 6 f . . 
+. f 6 6 f 3 f f f f 3 f 6 6 f . 
+. . f f d 3 5 3 3 5 3 d f f . . 
+. . f d d f 3 5 5 3 f d d f . . 
+. . . f f 3 3 3 3 3 3 f f . . . 
+. . . f 3 3 5 3 3 5 3 3 f . . . 
+. . . f f f f f f f f f f . . . 
+. . . . . f f . . f f . . . . . 
+`;
+            case "image10":
+            case "sabio":return img`
+. . . . . . . c c c . . . . . . 
+. . . . . . c b 5 c . . . . . . 
+. . . . c c c 5 5 c c c . . . . 
+. . c c b c 5 5 5 5 c c c c . . 
+. c b b 5 b 5 5 5 5 b 5 b b c . 
+. c b 5 5 b b 5 5 b b 5 5 b c . 
+. . f 5 5 5 b b b b 5 5 5 c . . 
+. . f f 5 5 5 5 5 5 5 5 f f . . 
+. . f f f b f e e f b f f f . . 
+. . f f f 1 f b b f 1 f f f . . 
+. . . f f b b b b b b f f . . . 
+. . . e e f e e e e f e e . . . 
+. . e b c b 5 b b 5 b f b e . . 
+. . e e f 5 5 5 5 5 5 f e e . . 
+. . . . c b 5 5 5 5 b c . . . . 
+. . . . . f f f f f f . . . . . 
+`;
+            case "image4":
+            case "swampTree1":return img`
+................
+..........b.....
+..........cb....
+.......c..cbc...
+......cc...cdc..
+.....cb....cbdc.
+.....fc....cbdc.
+.....fcc..ccbdc.
+.....fccffcdbdc.
+......fffddbddc.
+...cc.fcdbbddc..
+..cb..cdbdddb...
+..fc..bbddbc....
+..fbccbddcc..bb.
+..fcbbddccccbbf.
+...fcddbccdddf..
+....fddbbffff...
+....fddbbf......
+....fdddbccc....
+..fffdbddbbbc...
+.ffbbdbbdccbbf..
+.fccffffddccfff.
+.......ffddf....
+.........ccf....
 `;
         }
         return null;
