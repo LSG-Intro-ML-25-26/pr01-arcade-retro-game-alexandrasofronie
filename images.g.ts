@@ -85,52 +85,6 @@ f f f c 3 c c c c 3 c f f f
 . . . . . f f f f f f f . . . . 
 . . . . . . . . . f f f . . . . 
 `;
-            case "image6":
-            case "bridge":return img`
-.eeee..............eeee.
-eeddee............eeddee
-edbbde............edbbde
-edbbdeeeeeeeeeeeeeedbbde
-feddeebbbbbbbbbbbbfeddee
-feeeefbbbbbbbbbbbbfeeeef
-feeeefeebbbbbbbbeefeeeef
-eeddeffeeeeeeeeeeffeddee
-edbbdeffeeeeeeeeffedbbde
-edbbdebbbbbbbbbbbbedbbde
-feddeebbbbbbbbbbbbfeddee
-feeeefeebbbbbbbbeefeeeef
-feeeeffeeeeeeeeeeffeeeef
-eeddeeffeeeeeeeeffeeddee
-edbbdebbbbbbbbbbbbedbbde
-edbbdebbbbbbbbbbbbedbbde
-feddeeeebbbbbbbbeefeddee
-feeeeffeeeeeeeeeeffeeeef
-feeeefffeeeeeeeefffeeeef
-eeddeebbbbbbbbbbbbeeddee
-edbbdebbbbbbbbbbbbedbbde
-edbbdeeebbbbbbbbeeedbbde
-feddeefeeeeeeeeeeffeddee
-feeeefffeeeeeeeefffeeeef
-feeeefbbbbbbbbbbbbfeeeef
-eeddeebbbbbbbbbbbbeeddee
-edbbdeeebbbbbbbbeeedbbde
-edbbdefeeeeeeeeeefedbbde
-feddeeffeeeeeeeefffeddee
-feeeefbbbbbbbbbbbbfeeeef
-feeeefbbbbbbbbbbbbfeeeef
-eeddeeeebbbbbbbbeeeeddee
-edbbdefeeeeeeeeeefedbbde
-edbbdeffeeeeeeeeffedbbde
-feddeebbbbbbbbbbbbfeddee
-feeeefbbbbbbbbbbbbfeeeef
-fbeeefeebbbbbbbbeefbeeef
-fbbffffeeeeeeeeeeffbbfff
-febbbefffffffffffffebbbe
-feefff666666666666feefff
-feeeef666666666666feeeef
-eeeeef............eeeeef
-.eeff..............eeff.
-`;
             case "image2":
             case "sabio":return img`
 . . . . . . . c c c . . . . . . 
@@ -185,25 +139,6 @@ eeeeef............eeeeef
 .......eeee.4ee..ece.cccec......
 ....eee....e......e...eee.ccee..
 `;
-            case "image7":
-            case "diario":return img`
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . e e e e e e e e . . . . . . 
-. e e 1 1 1 1 1 1 e . . . . . . 
-. f e e e e e e 1 e . . . . . . 
-. f e e e e e e 1 e . . . . . . 
-. f e e e e e e 1 e . . . . . . 
-. f e e a a e e 1 e . . . . . . 
-. f e 5 5 5 5 e 1 e . . . . . . 
-. f e 5 5 5 5 e 1 e . . . . . . 
-. f e 5 5 5 5 e 1 e . . . . . . 
-. f e e e e e e 1 e . . . . . . 
-. f e e e e e e 1 e . . . . . . 
-. e e e e e e e 1 e . . . . . . 
-. . e e e e e e e e . . . . . . 
-. . . . . . . . . . . . . . . . 
-`;
             case "image8":
             case "herrero":return img`
 . . . . . . . . . . . . . . . . 
@@ -222,6 +157,80 @@ eeeeef............eeeeef
 . . f b b b b f 5 4 4 f . . . . 
 . . . f c c f f f f f f . . . . 
 . . . . f f . . . f f f . . . . 
+`;
+            case "image7":
+            case "mineral":return img`
+. . . . 6 6 . . 
+. . . . 1 4 6 . 
+. . 4 . . 4 1 6 
+c b b 4 4 4 d c 
+. c b b 4 d c . 
+. . c c c c . . 
+`;
+            case "image9":
+            case "diario":return img`
+. . . e e e e e e e e e . . . . 
+. . . f e 1 1 1 1 1 1 e . . . . 
+. . . f e e e e e e 1 e . . . . 
+. . . f e e c c e e 1 e . . . . 
+. . . f e e 5 5 e e 1 e . . . . 
+. . . f e 5 5 5 5 e 1 e . . . . 
+. . . f e 5 5 5 5 e 1 e . . . . 
+. . . f e 5 5 5 5 e 1 e . . . . 
+. . . f e 5 5 5 5 e 1 e . . . . 
+. . . f e e e e e e 1 e . . . . 
+. . . f e e e e e e 1 e . . . . 
+. . . e e e e e e e 1 e . . . . 
+. . . . e e e e e e e e . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+`;
+            case "image6":
+            case "bridge":return img`
+.eeee..............eeee.
+eeddee............eeddee
+edbbde............edbbde
+edbbdeeeeeeeeeeeeeedbbde
+feddeebbbbbbbbbbbbfeddee
+feeeefbbbbbbbbbbbbfeeeef
+feeeefeebbbbbbbbeefeeeef
+eeddeffeeeeeeeeeeffeddee
+edbbdeffeeeeeeeeffedbbde
+edbbdebbbbbbbbbbbbedbbde
+feddeebbbbbbbbbbbbfeddee
+feeeefeebbbbbbbbeefeeeef
+feeeeffeeeeeeeeeeffeeeef
+eeddeeffeeeeeeeeffeeddee
+edbbdebbbbbbbbbbbbedbbde
+edbbdebbbbbbbbbbbbedbbde
+feddeeeebbbbbbbbeefeddee
+feeeeffeeeeeeeeeeffeeeef
+feeeefffeeeeeeeefffeeeef
+eeddeebbbbbbbbbbbbeeddee
+edbbdebbbbbbbbbbbbedbbde
+edbbdeeebbbbbbbbeeedbbde
+feddeefeeeeeeeeeeffeddee
+feeeefffeeeeeeeefffeeeef
+feeeefbbbbbbbbbbbbfeeeef
+eeddeebbbbbbbbbbbbeeddee
+edbbdeeebbbbbbbbeeedbbde
+edbbdefeeeeeeeeeefedbbde
+feddeeffeeeeeeeefffeddee
+feeeefbbbbbbbbbbbbfeeeef
+feeeefbbbbbbbbbbbbfeeeef
+eeddeeeebbbbbbbbeeeeddee
+edbbdefeeeeeeeeeefedbbde
+edbbdeffeeeeeeeeffedbbde
+feddeebbbbbbbbbbbbfeddee
+feeeefbbbbbbbbbbbbfeeeef
+fbeeefeebbbbbbbbeefbeeef
+fbbffffeeeeeeeeeeffbbfff
+febbbefffffffffffffebbbe
+feefff666666666666feefff
+feeeef666666666666feeeef
+eeeeef............eeeeef
+.eeff..............eeff.
 `;
         }
         return null;

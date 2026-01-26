@@ -10,6 +10,10 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.NPC, function (sprite, otherSpri
         hablarConHerrero()
     }
 })
+function crearDiario () {
+    diario = sprites.create(assets.image`diario`, SpriteKind.Loot)
+    tiles.placeOnTile(diario, tiles.getTileLocation(11, 23))
+}
 controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
     animation.runImageAnimation(
     nena,
@@ -41,15 +45,68 @@ controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
 })
 function hablarConHerrero () {
     if (puede_hablar_herrero == false) {
-        game.showLongText("Herrero: Habla con el sabio primero.", DialogLayout.Bottom)
+        game.showLongText("Herrero Bron: Habla con el sabio Aleron primero.", DialogLayout.Bottom)
+        pause(500)
+        game.showLongText("El te dará una buena razón para estar aquí.", DialogLayout.Bottom)
+        return
+    }
+    if (misionHerreroActiva == false) {
+        if (hablandoConHerrero == 0) {
+            game.showLongText("Herrero: Ah, el sabio te envió.", DialogLayout.Bottom)
+            hablandoConHerrero = 1
+        } else if (hablandoConHerrero == 1) {
+            game.showLongText("Herrero: Mi martillo se rompió. ¿Me ayudas a repararlo?", DialogLayout.Bottom)
+            hablandoConHerrero = 2
+        } else if (hablandoConHerrero == 2) {
+            respuesta = game.ask("SI", "NO")
+            if (respuesta) {
+                misionHerreroActiva = true
+                hablandoConHerrero = 3
+                crearMinerales()
+            } else {
+                game.showLongText("Herrero: Otro día entonces...", DialogLayout.Bottom)
+                hablandoConHerrero = 4
+            }
+        } else if (hablandoConHerrero == 3) {
+            game.showLongText("Herrero: ¡Perfecto! Busca 3 minerales. Están cerca de la playa.", DialogLayout.Bottom)
+        } else {
+            if (hablandoConHerrero == 4) {
+                game.showLongText("Herrero: ¿Cambiaste de opinión?", DialogLayout.Bottom)
+                hablandoConHerrero = 2
+            }
+            if (hablandoConHerrero == 5) {
+                game.showLongText("Herrero: Gracias por tu ayuda.", DialogLayout.Bottom)
+            }
+        }
+    } else if (minerales_recogidos >= 3) {
+        game.showLongText("Herrero: ¡Tienes todos los minerales!", DialogLayout.Bottom)
+        misionHerreroActiva = false
+        hablandoConHerrero = 5
+        pause(500)
+        game.showLongText("Herrero: Con esto reparo mi martillo...", DialogLayout.Bottom)
+        pause(500)
+        game.showLongText("Mi abuelo forjó una caja especial. Para el Alquimista Valerio.", DialogLayout.Bottom)
+        pause(500)
+        game.showLongText("Tenía tres cerraduras mágicas...", DialogLayout.Bottom)
+        pause(500)
+        game.showLongText("Yo guardo la primera llave.", DialogLayout.Bottom)
+        pause(500)
+        game.showLongText("La segunda está con Lyra.", DialogLayout.Bottom)
+        puede_hablar_lyra = true
+    } else if (randint(0, 100) < 50) {
+        game.showLongText("Herrero: ¿Ya miraste cerca del puente?", DialogLayout.Bottom)
+        game.showLongText("También busca entre las rocas.", DialogLayout.Bottom)
+        game.showLongText("Y al fondo donde el agua es más profunda.", DialogLayout.Bottom)
     } else {
-        game.showLongText("Herrero: Ah, el sabio te envió.", DialogLayout.Bottom)
-        game.showLongText("Herrero: Necesito 3 minerales del río.", DialogLayout.Bottom)
+        game.showLongText("Herrero: ¿Ya encontraste los minerales?", DialogLayout.Bottom)
     }
 }
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Loot, function (sprite2, otherSprite2) {
     if (otherSprite2 == diario) {
         recogerDiario()
+    } else if (otherSprite2 == mineral1 || (otherSprite2 == mineral2 || otherSprite2 == mineral3)) {
+        objeto = otherSprite2
+        recogerMinerales()
     }
 })
 controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
@@ -63,7 +120,7 @@ controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
 function hablarConSabio () {
     if (misionSabioActiva == false) {
         if (hablandoConSabio == 0) {
-            game.showLongText("Sabio: ¡Hola! Perdí mi diario.", DialogLayout.Bottom)
+            game.showLongText("Sabio Aleron: ¡Hola! Perdí mi diario.", DialogLayout.Bottom)
             hablandoConSabio = 1
         } else if (hablandoConSabio == 1) {
             game.showLongText("Sabio: ¿Me ayudas a buscarlo?", DialogLayout.Bottom)
@@ -72,9 +129,8 @@ function hablarConSabio () {
             respuesta = game.ask("SI", "NO")
             if (respuesta) {
                 misionSabioActiva = true
-                diario = sprites.create(assets.image`diario`, SpriteKind.Loot)
-                tiles.placeOnTile(diario, tiles.getTileLocation(11, 23))
                 hablandoConSabio = 3
+                crearDiario()
             } else {
                 game.showLongText("Sabio: Tal vez otro día...", DialogLayout.Bottom)
                 hablandoConSabio = 4
@@ -390,20 +446,93 @@ function crearMapa () {
         7777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777
         `)
 }
+function recogerMinerales () {
+    if (objeto == mineral1 || (objeto == mineral2 || objeto == mineral3)) {
+        sprites.destroy(objeto)
+        minerales_recogidos = minerales_recogidos + 1
+        game.showLongText("¡Mineral" + minerales_recogidos + "/3!", DialogLayout.Bottom)
+    }
+}
+function crearMinerales () {
+    mineral1 = sprites.create(img`
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . c b a c . . . . . . 
+        . . . . c c b c f a c . . . . . 
+        . . . . a f b b b a c . . . . . 
+        . . . . a f f b a f c c . . . . 
+        . . . . c b b a f f c . . . . . 
+        . . . . . b b a f a . . . . . . 
+        . . . . . . c b b . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        `, SpriteKind.Loot)
+    tiles.placeOnTile(mineral1, tiles.getTileLocation(12, 20))
+    mineral2 = sprites.create(img`
+        . . . . . . . . c c c c . . . . 
+        . . . . c c c c c c c c c . . . 
+        . . . c f c c a a a a c a c . . 
+        . . c c f f f f a a a c a a c . 
+        . . c c a f f c a a f f f a a c 
+        . . c c a a a a b c f f f a a c 
+        . c c c c a c c b a f c a a c c 
+        c a f f c c c a b b 6 b b b c c 
+        c a f f f f c c c 6 b b b a a c 
+        c a a c f f c a 6 6 b b b a a c 
+        c c b a a a a b 6 b b a b b a . 
+        . c c b b b b b b b a c c b a . 
+        . . c c c b c c c b a a b c . . 
+        . . . . c b a c c b b b c . . . 
+        . . . . c b b a a 6 b c . . . . 
+        . . . . . . b 6 6 c c . . . . . 
+        `, SpriteKind.Loot)
+    tiles.placeOnTile(mineral2, tiles.getTileLocation(12, 10))
+    mineral3 = sprites.create(img`
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . c c c c . . 
+        . c c c c c . c c c c c f c c . 
+        c c a c c c c c 8 f f c f f c c 
+        c a f a a c c a f f c a a f f c 
+        c a 8 f a a c a c c c a a a a c 
+        c b c f a a a a a c c c c c c c 
+        c b b a a c f 8 a c c c 8 c c c 
+        . c b b a b c f a a a 8 8 c c . 
+        . . . . a a b b b a a 8 a c . . 
+        . . . . c b c a a c c b . . . . 
+        . . . . b b c c a b b a . . . . 
+        . . . . b b a b a 6 a . . . . . 
+        . . . . c b b b 6 6 c . . . . . 
+        . . . . . c a 6 6 b c . . . . . 
+        . . . . . . . c c c . . . . . . 
+        `, SpriteKind.Loot)
+    tiles.placeOnTile(mineral3, tiles.getTileLocation(12, 18))
+}
 let casaHerrero: Sprite = null
 let arbol2: Sprite = null
 let arbol1: Sprite = null
 let casaSabio: Sprite = null
-let respuesta = false
 let hablandoConSabio = 0
 let misionSabioActiva = false
+let objeto: Sprite = null
+let mineral3: Sprite = null
+let mineral2: Sprite = null
+let mineral1: Sprite = null
+let puede_hablar_lyra = false
+let respuesta = false
+let hablandoConHerrero = 0
+let minerales_recogidos = 0
+let misionHerreroActiva = false
 let puede_hablar_herrero = false
 let diarioEncontrado = false
-let diario: Sprite = null
 let nena: Sprite = null
+let diario: Sprite = null
 let herrero: Sprite = null
 let sabio: Sprite = null
-let misionActual = ""
 scene.setBackgroundImage(img`
     7777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777
     7777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777

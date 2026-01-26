@@ -11,6 +11,13 @@ def on_on_overlap(sprite, otherSprite):
         hablarConHerrero()
 sprites.on_overlap(SpriteKind.player, SpriteKind.NPC, on_on_overlap)
 
+def crearDiario():
+    global diario
+    diario = sprites.create(assets.image("""
+        diario
+        """), SpriteKind.Loot)
+    tiles.place_on_tile(diario, tiles.get_tile_location(11, 23))
+
 def on_down_pressed():
     animation.run_image_animation(nena,
         assets.animation("""
@@ -45,16 +52,74 @@ def on_left_pressed():
 controller.left.on_event(ControllerButtonEvent.PRESSED, on_left_pressed)
 
 def hablarConHerrero():
+    global hablandoConHerrero, respuesta, misionHerreroActiva, puede_hablar_lyra
     if puede_hablar_herrero == False:
-        game.show_long_text("Herrero: Habla con el sabio primero.", DialogLayout.BOTTOM)
+        game.show_long_text("Herrero Bron: Habla con el sabio Aleron primero.",
+            DialogLayout.BOTTOM)
+        pause(500)
+        game.show_long_text("El te dará una buena razón para estar aquí.",
+            DialogLayout.BOTTOM)
+        return
+    if misionHerreroActiva == False:
+        if hablandoConHerrero == 0:
+            game.show_long_text("Herrero: Ah, el sabio te envió.", DialogLayout.BOTTOM)
+            hablandoConHerrero = 1
+        elif hablandoConHerrero == 1:
+            game.show_long_text("Herrero: Mi martillo se rompió. ¿Me ayudas a repararlo?",
+                DialogLayout.BOTTOM)
+            hablandoConHerrero = 2
+        elif hablandoConHerrero == 2:
+            respuesta = game.ask("SI", "NO")
+            if respuesta:
+                misionHerreroActiva = True
+                hablandoConHerrero = 3
+                crearMinerales()
+            else:
+                game.show_long_text("Herrero: Otro día entonces...", DialogLayout.BOTTOM)
+                hablandoConHerrero = 4
+        elif hablandoConHerrero == 3:
+            game.show_long_text("Herrero: ¡Perfecto! Busca 3 minerales.",
+                DialogLayout.BOTTOM)
+        else:
+            if hablandoConHerrero == 4:
+                game.show_long_text("Herrero: ¿Cambiaste de opinión?", DialogLayout.BOTTOM)
+                hablandoConHerrero = 2
+            if hablandoConHerrero == 5:
+                game.show_long_text("Herrero: Gracias por tu ayuda.", DialogLayout.BOTTOM)
+    elif minerales_recogidos >= 3:
+        game.show_long_text("Herrero: ¡Tienes todos los minerales!", DialogLayout.BOTTOM)
+        misionHerreroActiva = False
+        hablandoConHerrero = 5
+        pause(500)
+        game.show_long_text("Herrero: Con esto reparo mi martillo...",
+            DialogLayout.BOTTOM)
+        pause(500)
+        game.show_long_text("Mi abuelo forjó una caja especial. Para el Alquimista Valerio.",
+            DialogLayout.BOTTOM)
+        pause(500)
+        game.show_long_text("Tenía tres cerraduras mágicas...", DialogLayout.BOTTOM)
+        pause(500)
+        game.show_long_text("Yo guardo la primera llave.", DialogLayout.BOTTOM)
+        pause(500)
+        game.show_long_text("La segunda está con Lyra.", DialogLayout.BOTTOM)
+        puede_hablar_lyra = True
+    elif randint(0, 100) < 50:
+        game.show_long_text("Herrero: ¿Ya miraste cerca del puente?",
+            DialogLayout.BOTTOM)
+        game.show_long_text("También busca entre las rocas.", DialogLayout.BOTTOM)
+        game.show_long_text("Y al fondo donde el agua es más profunda.",
+            DialogLayout.BOTTOM)
     else:
-        game.show_long_text("Herrero: Ah, el sabio te envió.", DialogLayout.BOTTOM)
-        game.show_long_text("Herrero: Necesito 3 minerales del río.",
+        game.show_long_text("Herrero: ¿Ya encontraste los minerales?",
             DialogLayout.BOTTOM)
 
 def on_on_overlap2(sprite2, otherSprite2):
+    global objeto
     if otherSprite2 == diario:
         recogerDiario()
+    elif otherSprite2 == mineral1 or (otherSprite2 == mineral2 or otherSprite2 == mineral3):
+        objeto = otherSprite2
+        recogerMinerales()
 sprites.on_overlap(SpriteKind.player, SpriteKind.Loot, on_on_overlap2)
 
 def on_up_pressed():
@@ -67,10 +132,10 @@ def on_up_pressed():
 controller.up.on_event(ControllerButtonEvent.PRESSED, on_up_pressed)
 
 def hablarConSabio():
-    global hablandoConSabio, respuesta, misionSabioActiva, diario, puede_hablar_herrero
+    global hablandoConSabio, respuesta, misionSabioActiva, puede_hablar_herrero
     if misionSabioActiva == False:
         if hablandoConSabio == 0:
-            game.show_long_text("Sabio: ¡Hola! Perdí mi diario.", DialogLayout.BOTTOM)
+            game.show_long_text("Sabio Aleron: ¡Hola! Perdí mi diario.", DialogLayout.BOTTOM)
             hablandoConSabio = 1
         elif hablandoConSabio == 1:
             game.show_long_text("Sabio: ¿Me ayudas a buscarlo?", DialogLayout.BOTTOM)
@@ -79,11 +144,8 @@ def hablarConSabio():
             respuesta = game.ask("SI", "NO")
             if respuesta:
                 misionSabioActiva = True
-                diario = sprites.create(assets.image("""
-                    diario
-                    """), SpriteKind.Loot)
-                tiles.place_on_tile(diario, tiles.get_tile_location(11, 23))
                 hablandoConSabio = 3
+                crearDiario()
             else:
                 game.show_long_text("Sabio: Tal vez otro día...", DialogLayout.BOTTOM)
                 hablandoConSabio = 4
@@ -413,20 +475,97 @@ def crearMapa():
         7777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777
         7777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777
         """))
+def recogerMinerales():
+    global minerales_recogidos
+    minerales_recogidos = 0
+    if objeto == mineral1 or (objeto == mineral2 or objeto == mineral3):
+        sprites.destroy(objeto)
+        minerales_recogidos = minerales_recogidos + 1
+        game.show_long_text("¡Mineral" + str(minerales_recogidos) + "/3!",
+            DialogLayout.BOTTOM)
+def crearMinerales():
+    global mineral1, mineral2, mineral3
+    mineral1 = sprites.create(img("""
+            . . . . . . . . . . . . . . . .
+            . . . . . . . . . . . . . . . .
+            . . . . . . . . . . . . . . . .
+            . . . . . . . . . . . . . . . .
+            . . . . . . c b a c . . . . . .
+            . . . . c c b c f a c . . . . .
+            . . . . a f b b b a c . . . . .
+            . . . . a f f b a f c c . . . .
+            . . . . c b b a f f c . . . . .
+            . . . . . b b a f a . . . . . .
+            . . . . . . c b b . . . . . . .
+            . . . . . . . . . . . . . . . .
+            . . . . . . . . . . . . . . . .
+            . . . . . . . . . . . . . . . .
+            . . . . . . . . . . . . . . . .
+            . . . . . . . . . . . . . . . .
+            """),
+        SpriteKind.Loot)
+    tiles.place_on_tile(mineral1, tiles.get_tile_location(12, 20))
+    mineral2 = sprites.create(img("""
+            . . . . . . . . c c c c . . . .
+            . . . . c c c c c c c c c . . .
+            . . . c f c c a a a a c a c . .
+            . . c c f f f f a a a c a a c .
+            . . c c a f f c a a f f f a a c
+            . . c c a a a a b c f f f a a c
+            . c c c c a c c b a f c a a c c
+            c a f f c c c a b b 6 b b b c c
+            c a f f f f c c c 6 b b b a a c
+            c a a c f f c a 6 6 b b b a a c
+            c c b a a a a b 6 b b a b b a .
+            . c c b b b b b b b a c c b a .
+            . . c c c b c c c b a a b c . .
+            . . . . c b a c c b b b c . . .
+            . . . . c b b a a 6 b c . . . .
+            . . . . . . b 6 6 c c . . . . .
+            """),
+        SpriteKind.Loot)
+    tiles.place_on_tile(mineral2, tiles.get_tile_location(12, 10))
+    mineral3 = sprites.create(img("""
+            . . . . . . . . . . . . . . . .
+            . . . . . . . . . . c c c c . .
+            . c c c c c . c c c c c f c c .
+            c c a c c c c c 8 f f c f f c c
+            c a f a a c c a f f c a a f f c
+            c a 8 f a a c a c c c a a a a c
+            c b c f a a a a a c c c c c c c
+            c b b a a c f 8 a c c c 8 c c c
+            . c b b a b c f a a a 8 8 c c .
+            . . . . a a b b b a a 8 a c . .
+            . . . . c b c a a c c b . . . .
+            . . . . b b c c a b b a . . . .
+            . . . . b b a b a 6 a . . . . .
+            . . . . c b b b 6 6 c . . . . .
+            . . . . . c a 6 6 b c . . . . .
+            . . . . . . . c c c . . . . . .
+            """),
+        SpriteKind.Loot)
+    tiles.place_on_tile(mineral3, tiles.get_tile_location(12, 18))
 casaHerrero: Sprite = None
 arbol2: Sprite = None
 arbol1: Sprite = None
 casaSabio: Sprite = None
-respuesta = False
 hablandoConSabio = 0
 misionSabioActiva = False
+objeto: Sprite = None
+mineral3: Sprite = None
+mineral2: Sprite = None
+mineral1: Sprite = None
+puede_hablar_lyra = False
+respuesta = False
+hablandoConHerrero = 0
+minerales_recogidos = 0
+misionHerreroActiva = False
 puede_hablar_herrero = False
 diarioEncontrado = False
-diario: Sprite = None
 nena: Sprite = None
+diario: Sprite = None
 herrero: Sprite = None
 sabio: Sprite = None
-misionActual = ""
 scene.set_background_image(img("""
     7777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777
     7777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777
