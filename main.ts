@@ -54,15 +54,17 @@ function crearMonstruos () {
         `, SpriteKind.Enemy)
     barra = statusbars.create(20, 4, StatusBarKind.Health)
     barra.value = 3
-    barra.attachToSprite(monstruo, 0, -20)
+    barra.max = 3
+    barra.attachToSprite(monstruo, 0, -2)
+    barra.setColor(7, 2)
     if (randint(0, 100) < 50) {
         tiles.placeOnTile(monstruo, tiles.getTileLocation(15, 17))
     } else {
         tiles.placeOnTile(monstruo, tiles.getTileLocation(25, 14))
     }
-    monstruo.setVelocity(randint(-40, 40), randint(-40, 40))
-    monstruo.setBounceOnWall(true)
+    monstruo.follow(nena, 30)
     monstruosEnMapa.push(monstruo)
+    barras.push(barra)
 }
 function hablarConLyra () {
     if (puede_hablar_lyra == false) {
@@ -229,11 +231,13 @@ function hablarConHerrero () {
 sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Enemy, function () {
     music.play(music.melodyPlayable(music.pewPew), music.PlaybackMode.UntilDone)
     sprites.destroy(proyectil)
-    barra.value = barra.value - 1
-    if (barra.value <= 0) {
-        sprites.destroy(monstruo)
-        monstruos_matados += 1
-        sprites.destroy(barra)
+    if (monstruosEnMapa.indexOf(monstruo) >= 0) {
+        i = monstruosEnMapa.indexOf(monstruo)
+        barras[i].value += -1
+        if (barras[i].value <= 0) {
+            sprites.destroy(monstruo)
+            monstruos_matados += 1
+        }
     }
 })
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Loot, function (sprite2, otherSprite2) {
@@ -659,6 +663,7 @@ let objeto: Sprite = null
 let mineral3: Sprite = null
 let mineral2: Sprite = null
 let mineral1: Sprite = null
+let i = 0
 let hablandoConHerrero = 0
 let minerales_recogidos = 0
 let misionHerreroActiva = false
@@ -670,6 +675,7 @@ let hablandoConLyra = 0
 let monstruos_matados = 0
 let misionLyraActiva = false
 let puede_hablar_lyra = false
+let barras: StatusBarSprite[] = []
 let monstruosEnMapa: Sprite[] = []
 let barra: StatusBarSprite = null
 let monstruo: Sprite = null
@@ -803,7 +809,7 @@ scene.setBackgroundImage(img`
     `)
 game.splash("El Legado del Alquimista", "Habla con los NPCs")
 crearMapa()
-game.onUpdateInterval(2000, function () {
+game.onUpdateInterval(3000, function () {
     if (misionLyraActiva == true) {
         if (monstruosEnMapa.length < 5) {
             crearMonstruos()
