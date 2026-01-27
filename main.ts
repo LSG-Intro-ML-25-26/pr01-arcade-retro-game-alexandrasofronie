@@ -23,12 +23,48 @@ controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
     500,
     false
     )
+    direccionNena = "abajo"
 })
 function crearMonstruos () {
-	
+    monstruo = sprites.create(img`
+        ........................
+        ........................
+        ........................
+        ........................
+        ..........ffff..........
+        ........ff1111ff........
+        .......fb111111bf.......
+        .......f11111111f.......
+        ......fd11111111df......
+        ......fd11111111df......
+        ......fddd1111dddf......
+        ......fbdbfddfbdbf......
+        ......fcdcf11fcdcf......
+        .......fb111111bf.......
+        ......fffcdb1bdffff.....
+        ....fc111cbfbfc111cf....
+        ....f1b1b1ffff1b1b1f....
+        ....fbfbffffffbfbfbf....
+        .........ffffff.........
+        ...........fff..........
+        ........................
+        ........................
+        ........................
+        ........................
+        `, SpriteKind.Enemy)
+    barra = statusbars.create(20, 4, StatusBarKind.Health)
+    barra.value = 3
+    barra.attachToSprite(monstruo, 0, -20)
+    if (randint(0, 100) < 50) {
+        tiles.placeOnTile(monstruo, tiles.getTileLocation(15, 17))
+    } else {
+        tiles.placeOnTile(monstruo, tiles.getTileLocation(25, 14))
+    }
+    monstruo.setVelocity(randint(-40, 40), randint(-40, 40))
+    monstruo.setBounceOnWall(true)
+    monstruosEnMapa.push(monstruo)
 }
 function hablarConLyra () {
-    let monstruos_matados = 0
     if (puede_hablar_lyra == false) {
         game.showLongText("Lyra: Habla con el herrero Bron primero.", DialogLayout.Bottom)
         game.showLongText("El te dirá cuando tienes que volver por aquí.", DialogLayout.Bottom)
@@ -93,6 +129,7 @@ controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
     500,
     false
     )
+    direccionNena = "derecha"
 })
 controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
     animation.runImageAnimation(
@@ -101,6 +138,39 @@ controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
     500,
     false
     )
+    direccionNena = "izquierda"
+})
+controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
+    if (misionLyraActiva == true) {
+        proyectil = sprites.create(img`
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . 4 4 . . . . . . . 
+            . . . . . . 4 5 5 4 . . . . . . 
+            . . . . . . 2 5 5 2 . . . . . . 
+            . . . . . . . 2 2 . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            `, SpriteKind.Projectile)
+        proyectil.setPosition(nena.x, nena.y)
+        if (direccionNena == "abajo") {
+            proyectil.setVelocity(0, 150)
+        } else if (direccionNena == "arriba") {
+            proyectil.setVelocity(0, -150)
+        } else if (direccionNena == "izquierda") {
+            proyectil.setVelocity(-150, 0)
+        } else if (direccionNena == "derecha") {
+            proyectil.setVelocity(150, 0)
+        }
+    }
 })
 function hablarConHerrero () {
     if (puede_hablar_herrero == false) {
@@ -156,6 +226,16 @@ function hablarConHerrero () {
         game.showLongText("Herrero: ¿Ya encontraste los minerales?", DialogLayout.Bottom)
     }
 }
+sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Enemy, function () {
+    music.play(music.melodyPlayable(music.pewPew), music.PlaybackMode.UntilDone)
+    sprites.destroy(proyectil)
+    barra.value = barra.value - 1
+    if (barra.value <= 0) {
+        sprites.destroy(monstruo)
+        monstruos_matados += 1
+        sprites.destroy(barra)
+    }
+})
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Loot, function (sprite2, otherSprite2) {
     if (otherSprite2 == diario) {
         recogerDiario()
@@ -171,6 +251,7 @@ controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
     500,
     false
     )
+    direccionNena = "arriba"
 })
 function hablarConSabio () {
     if (misionSabioActiva == false) {
@@ -582,11 +663,17 @@ let hablandoConHerrero = 0
 let minerales_recogidos = 0
 let misionHerreroActiva = false
 let puede_hablar_herrero = false
+let proyectil: Sprite = null
 let diarioEncontrado = false
 let respuesta = false
 let hablandoConLyra = 0
+let monstruos_matados = 0
 let misionLyraActiva = false
 let puede_hablar_lyra = false
+let monstruosEnMapa: Sprite[] = []
+let barra: StatusBarSprite = null
+let monstruo: Sprite = null
+let direccionNena = ""
 let nena: Sprite = null
 let diario: Sprite = null
 let lyra: Sprite = null
@@ -716,3 +803,10 @@ scene.setBackgroundImage(img`
     `)
 game.splash("El Legado del Alquimista", "Habla con los NPCs")
 crearMapa()
+game.onUpdateInterval(2000, function () {
+    if (misionLyraActiva == true) {
+        if (monstruosEnMapa.length < 5) {
+            crearMonstruos()
+        }
+    }
+})
