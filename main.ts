@@ -3,6 +3,39 @@ namespace SpriteKind {
     export const Decoracion = SpriteKind.create()
     export const Loot = SpriteKind.create()
 }
+namespace StatusBarKind {
+    export const Contador = StatusBarKind.create()
+}
+sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Enemy, function (proyectil, enemigo) {
+    let barra: StatusBarSprite;
+sprites.destroy(proyectil)
+    enemy_index = -1
+    k = 0
+    while (k < monstruosEnMapa.length) {
+        if (monstruosEnMapa[k] == enemigo) {
+            enemy_index = k
+            break;
+        }
+        k += 1
+    }
+    if (enemy_index >= 0) {
+        barra = barras[enemy_index]
+        barra.value -= 1
+if (barra.value == 2) {
+            barra.setColor(9, 2)
+        } else if (barra.value == 1) {
+            barra.setColor(2, 2)
+        }
+        if (barra.value <= 0) {
+            sprites.destroy(enemigo)
+            sprites.destroy(barra)
+            monstruosEnMapa.removeAt(enemy_index)
+            barras.removeAt(enemy_index)
+            monstruos_matados2 = monstruos_matados2 + 1
+            info.changeScoreBy(1)
+        }
+    }
+})
 sprites.onOverlap(SpriteKind.Player, SpriteKind.NPC, function (sprite, otherSprite) {
     if (otherSprite == sabio) {
         hablarConSabio()
@@ -52,11 +85,11 @@ function crearMonstruos () {
         ........................
         ........................
         `, SpriteKind.Enemy)
-    barra = statusbars.create(20, 4, StatusBarKind.Health)
-    barra.value = 3
-    barra.max = 3
-    barra.attachToSprite(monstruo, 0, -2)
-    barra.setColor(7, 2)
+    barra2 = statusbars.create(20, 4, StatusBarKind.Health)
+    barra2.value = 3
+    barra2.max = 3
+    barra2.attachToSprite(monstruo, 0, -2)
+    barra2.setColor(7, 2)
     if (randint(0, 100) < 50) {
         tiles.placeOnTile(monstruo, tiles.getTileLocation(15, 17))
     } else {
@@ -64,7 +97,7 @@ function crearMonstruos () {
     }
     monstruo.follow(nena, 30)
     monstruosEnMapa.push(monstruo)
-    barras.push(barra)
+    barras.push(barra2)
 }
 function hablarConLyra () {
     if (puede_hablar_lyra == false) {
@@ -87,6 +120,7 @@ function hablarConLyra () {
                 game.showLongText("Lyra: ¡Gracias! Usa el botón A para disparar.", DialogLayout.Bottom)
                 hablandoConLyra = 3
                 crearMonstruos()
+                info.setScore(0)
             } else {
                 game.showLongText("Lyra: Entiendo... vuelve cuando estés listo.", DialogLayout.Bottom)
                 hablandoConLyra = 4
@@ -102,18 +136,20 @@ function hablarConLyra () {
                 game.showLongText("Lyra: Gracias por limpiar el bosque.", DialogLayout.Bottom)
             }
         }
-    } else if (monstruos_matados >= 10) {
+    } else if (monstruos_matados2 >= 10) {
         music.play(music.melodyPlayable(music.baDing), music.PlaybackMode.UntilDone)
         game.showLongText("Lyra: ¡Increíble! Has eliminado 10 criaturas.", DialogLayout.Bottom)
+        limpiarMonstruos()
         misionLyraActiva = false
         hablandoConLyra = 5
         pause(500)
         game.showLongText("Lyra: Como prometí, aquí tienes la llave.", DialogLayout.Bottom)
         game.showLongText("Lyra: Esta es la segunda llave del cofre del Alquimista.", DialogLayout.Bottom)
         game.showLongText("Lyra: La tercera cerca del lago..", DialogLayout.Bottom)
+        info.setScore(2)
     } else if (randint(0, 100) < 50) {
         game.showLongText("Lyra: ¿Cómo va la caza?", DialogLayout.Bottom)
-        game.showLongText("Lyra: Llevas " + monstruos_matados + "/10 criaturas.", DialogLayout.Bottom)
+        game.showLongText("Lyra: Llevas " + ("" + monstruos_matados2) + "/10 criaturas.", DialogLayout.Bottom)
     } else {
         game.showLongText("Lyra: Las criaturas aparecen por todo el bosque.", DialogLayout.Bottom)
     }
@@ -144,7 +180,7 @@ controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
 })
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     if (misionLyraActiva == true) {
-        proyectil = sprites.create(img`
+        proyectil2 = sprites.create(img`
             . . . . . . . . . . . . . . . . 
             . . . . . . . . . . . . . . . . 
             . . . . . . . . . . . . . . . . 
@@ -162,15 +198,15 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
             . . . . . . . . . . . . . . . . 
             . . . . . . . . . . . . . . . . 
             `, SpriteKind.Projectile)
-        proyectil.setPosition(nena.x, nena.y)
+        proyectil2.setPosition(nena.x, nena.y)
         if (direccionNena == "abajo") {
-            proyectil.setVelocity(0, 150)
+            proyectil2.setVelocity(0, 150)
         } else if (direccionNena == "arriba") {
-            proyectil.setVelocity(0, -150)
+            proyectil2.setVelocity(0, -150)
         } else if (direccionNena == "izquierda") {
-            proyectil.setVelocity(-150, 0)
+            proyectil2.setVelocity(-150, 0)
         } else if (direccionNena == "derecha") {
-            proyectil.setVelocity(150, 0)
+            proyectil2.setVelocity(150, 0)
         }
     }
 })
@@ -221,6 +257,7 @@ function hablarConHerrero () {
         game.showLongText("La segunda está con Lyra.", DialogLayout.Bottom)
         game.showLongText("Ve a verla en el bosque para conseguir la llave.", DialogLayout.Bottom)
         puede_hablar_lyra = true
+        info.setScore(1)
     } else if (randint(0, 100) < 50) {
         game.showLongText("Herrero: ¿Ya miraste dentro de la mazmorra?", DialogLayout.Bottom)
         game.showLongText("Allí deben estar.", DialogLayout.Bottom)
@@ -228,18 +265,6 @@ function hablarConHerrero () {
         game.showLongText("Herrero: ¿Ya encontraste los minerales?", DialogLayout.Bottom)
     }
 }
-sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Enemy, function () {
-    music.play(music.melodyPlayable(music.pewPew), music.PlaybackMode.UntilDone)
-    sprites.destroy(proyectil)
-    if (monstruosEnMapa.indexOf(monstruo) >= 0) {
-        i = monstruosEnMapa.indexOf(monstruo)
-        barras[i].value += -1
-        if (barras[i].value <= 0) {
-            sprites.destroy(monstruo)
-            monstruos_matados += 1
-        }
-    }
-})
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Loot, function (sprite2, otherSprite2) {
     if (otherSprite2 == diario) {
         recogerDiario()
@@ -294,7 +319,7 @@ function hablarConSabio () {
         pause(500)
         game.showLongText("Sabio: Este diario... habla de mi maestro.", DialogLayout.Bottom)
         game.showLongText("El Alquimista Valerio desapareció hace años...", DialogLayout.Bottom)
-        game.showLongText("El Alquimista dejó tres llaves ocultas.", DialogLayout.Bottom)
+        game.showLongText("Y dejó tres llaves ocultas.", DialogLayout.Bottom)
         game.showLongText("La primera está con el herrero Bron.", DialogLayout.Bottom)
         game.showLongText("Ve a verlo. Está al otro lado del pueblo.", DialogLayout.Bottom)
         puede_hablar_herrero = true
@@ -305,6 +330,14 @@ function hablarConSabio () {
     } else {
         game.showLongText("Sabio: ¿Ya lo encontrase?", DialogLayout.Bottom)
     }
+}
+function limpiarMonstruos () {
+    for (let i = 0; i <= monstruosEnMapa.length - 1; i++) {
+        sprites.destroy(monstruosEnMapa[i])
+        sprites.destroy(barras[i])
+    }
+    monstruosEnMapa = []
+    barras = []
 }
 function crearMapa () {
     misionSabioActiva = false
@@ -590,7 +623,7 @@ function recogerMinerales () {
         sprites.destroy(objeto)
         music.play(music.melodyPlayable(music.baDing), music.PlaybackMode.UntilDone)
         minerales_recogidos = minerales_recogidos + 1
-        game.showLongText("¡Mineral" + minerales_recogidos + "/3!", DialogLayout.Bottom)
+        game.showLongText("¡Mineral" + ("" + minerales_recogidos) + "/3!", DialogLayout.Bottom)
     }
 }
 function crearMinerales () {
@@ -663,21 +696,17 @@ let objeto: Sprite = null
 let mineral3: Sprite = null
 let mineral2: Sprite = null
 let mineral1: Sprite = null
-let i = 0
 let hablandoConHerrero = 0
 let minerales_recogidos = 0
 let misionHerreroActiva = false
 let puede_hablar_herrero = false
-let proyectil: Sprite = null
+let proyectil2: Sprite = null
 let diarioEncontrado = false
 let respuesta = false
 let hablandoConLyra = 0
-let monstruos_matados = 0
 let misionLyraActiva = false
 let puede_hablar_lyra = false
-let barras: StatusBarSprite[] = []
-let monstruosEnMapa: Sprite[] = []
-let barra: StatusBarSprite = null
+let barra2: StatusBarSprite = null
 let monstruo: Sprite = null
 let direccionNena = ""
 let nena: Sprite = null
@@ -685,6 +714,13 @@ let diario: Sprite = null
 let lyra: Sprite = null
 let herrero: Sprite = null
 let sabio: Sprite = null
+let monstruos_matados2 = 0
+let barras: StatusBarSprite[] = []
+let monstruosEnMapa: Sprite[] = []
+let k = 0
+let enemy_index = 0
+let enemy_index2 = 0
+let j = 0
 scene.setBackgroundImage(img`
     7777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777
     7777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777

@@ -4,12 +4,39 @@ class SpriteKind:
     Decoracion = SpriteKind.create()
     Loot = SpriteKind.create()
 
-def on_on_overlap(sprite, otherSprite):
+def on_on_overlap(proyectil, enemigo):
+    global enemy_index, i, monstruos_matados2
+    sprites.destroy(proyectil)
+    enemy_index = -1
+    i = 0
+    while i < len(monstruosEnMapa):
+        if monstruosEnMapa[i] == enemigo:
+            enemy_index = i
+            break
+        i += 1
+    if enemy_index >= 0:
+        barra = barras[enemy_index]
+        barra.value -= 1
+        if barra.value == 2:
+            barra.set_color(9, 2)
+        elif barra.value == 1:
+            barra.set_color(2, 2)
+        if barra.value <= 0:
+            sprites.destroy(enemigo)
+            sprites.destroy(barra)
+            monstruosEnMapa.remove_at(enemy_index)
+            barras.remove_at(enemy_index)
+            monstruos_matados2 = monstruos_matados2 + 1
+sprites.on_overlap(SpriteKind.projectile, SpriteKind.enemy, on_on_overlap)
+
+def on_on_overlap2(sprite, otherSprite):
     if otherSprite == sabio:
         hablarConSabio()
     elif otherSprite == herrero:
         hablarConHerrero()
-sprites.on_overlap(SpriteKind.player, SpriteKind.NPC, on_on_overlap)
+    elif otherSprite == lyra:
+        hablarConLyra()
+sprites.on_overlap(SpriteKind.player, SpriteKind.NPC, on_on_overlap2)
 
 def crearDiario():
     global diario
@@ -19,17 +46,59 @@ def crearDiario():
     tiles.place_on_tile(diario, tiles.get_tile_location(11, 23))
 
 def on_down_pressed():
+    global direccionNena
     animation.run_image_animation(nena,
         assets.animation("""
             nena-animation-down
             """),
         500,
         False)
+    direccionNena = "abajo"
 controller.down.on_event(ControllerButtonEvent.PRESSED, on_down_pressed)
 
+def crearMonstruos():
+    global monstruo, barra2
+    monstruo = sprites.create(img("""
+            ........................
+            ........................
+            ........................
+            ........................
+            ..........ffff..........
+            ........ff1111ff........
+            .......fb111111bf.......
+            .......f11111111f.......
+            ......fd11111111df......
+            ......fd11111111df......
+            ......fddd1111dddf......
+            ......fbdbfddfbdbf......
+            ......fcdcf11fcdcf......
+            .......fb111111bf.......
+            ......fffcdb1bdffff.....
+            ....fc111cbfbfc111cf....
+            ....f1b1b1ffff1b1b1f....
+            ....fbfbffffffbfbfbf....
+            .........ffffff.........
+            ...........fff..........
+            ........................
+            ........................
+            ........................
+            ........................
+            """),
+        SpriteKind.enemy)
+    barra2 = statusbars.create(20, 4, StatusBarKind.health)
+    barra2.value = 3
+    barra2.max = 3
+    barra2.attach_to_sprite(monstruo, 0, -2)
+    barra2.set_color(7, 2)
+    if randint(0, 100) < 50:
+        tiles.place_on_tile(monstruo, tiles.get_tile_location(15, 17))
+    else:
+        tiles.place_on_tile(monstruo, tiles.get_tile_location(25, 14))
+    monstruo.follow(nena, 30)
+    monstruosEnMapa.append(monstruo)
+    barras.append(barra2)
 def hablarConLyra():
     global hablandoConLyra, respuesta, misionLyraActiva
-    monstruos_matados = 0
     if puede_hablar_lyra == False:
         game.show_long_text("Lyra: Habla con el herrero Bron primero.",
             DialogLayout.BOTTOM)
@@ -38,46 +107,57 @@ def hablarConLyra():
         return
     if misionLyraActiva == False:
         if hablandoConLyra == 0:
-            game.show_long_text("", DialogLayout.BOTTOM)
+            game.show_long_text("Lyra: ¡Hola! Soy Lyra, la guardiana del bosque.",
+                DialogLayout.BOTTOM)
+            game.show_long_text("Lyra: El lago está lleno de criaturas peligrosas.",
+                DialogLayout.BOTTOM)
             hablandoConLyra = 1
         elif hablandoConLyra == 1:
-            game.show_long_text("", DialogLayout.BOTTOM)
+            game.show_long_text("Lyra: ¿Podrías ayudarme a eliminar 10 de ellas?",
+                DialogLayout.BOTTOM)
             hablandoConLyra = 2
         elif hablandoConLyra == 2:
-            respuesta = game.ask("SI", "NO")
+            respuesta = game.ask("SÍ, te ayudo", "NO, tengo miedo")
             if respuesta:
                 misionLyraActiva = True
+                game.show_long_text("Lyra: ¡Gracias! Usa el botón A para disparar.",
+                    DialogLayout.BOTTOM)
                 hablandoConLyra = 3
-                crearMinerales()
+                crearMonstruos()
             else:
-                game.show_long_text("", DialogLayout.BOTTOM)
+                game.show_long_text("Lyra: Entiendo... vuelve cuando estés listo.",
+                    DialogLayout.BOTTOM)
                 hablandoConLyra = 4
         elif hablandoConLyra == 3:
-            game.show_long_text("", DialogLayout.BOTTOM)
+            game.show_long_text("Lyra: Elimina 10 criaturas y vuelve a verme.",
+                DialogLayout.BOTTOM)
         else:
             if hablandoConLyra == 4:
-                game.show_long_text("", DialogLayout.BOTTOM)
+                game.show_long_text("Lyra: ¿Has cambiado de opinión?", DialogLayout.BOTTOM)
                 hablandoConLyra = 2
             if hablandoConLyra == 5:
-                game.show_long_text("", DialogLayout.BOTTOM)
-    elif monstruos_matados >= 10:
+                game.show_long_text("Lyra: Gracias por limpiar el bosque.", DialogLayout.BOTTOM)
+    elif monstruos_matados2 >= 10:
         music.play(music.melody_playable(music.ba_ding),
             music.PlaybackMode.UNTIL_DONE)
-        game.show_long_text("", DialogLayout.BOTTOM)
+        game.show_long_text("Lyra: ¡Increíble! Has eliminado 10 criaturas.",
+            DialogLayout.BOTTOM)
+        limpiarMonstruos()
         misionLyraActiva = False
         hablandoConLyra = 5
         pause(500)
-        game.show_long_text("", DialogLayout.BOTTOM)
-        game.show_long_text("", DialogLayout.BOTTOM)
-        game.show_long_text("", DialogLayout.BOTTOM)
-        game.show_long_text("", DialogLayout.BOTTOM)
-        game.show_long_text("", DialogLayout.BOTTOM)
-        game.show_long_text("", DialogLayout.BOTTOM)
+        game.show_long_text("Lyra: Como prometí, aquí tienes la llave.",
+            DialogLayout.BOTTOM)
+        game.show_long_text("Lyra: Esta es la segunda llave del cofre del Alquimista.",
+            DialogLayout.BOTTOM)
+        game.show_long_text("Lyra: La tercera cerca del lago..", DialogLayout.BOTTOM)
     elif randint(0, 100) < 50:
-        game.show_long_text("", DialogLayout.BOTTOM)
-        game.show_long_text("", DialogLayout.BOTTOM)
+        game.show_long_text("Lyra: ¿Cómo va la caza?", DialogLayout.BOTTOM)
+        game.show_long_text("Lyra: Llevas " + ("" + str(monstruos_matados2)) + "/10 criaturas.",
+            DialogLayout.BOTTOM)
     else:
-        game.show_long_text("", DialogLayout.BOTTOM)
+        game.show_long_text("Lyra: Las criaturas aparecen por todo el bosque.",
+            DialogLayout.BOTTOM)
 def recogerDiario():
     global diarioEncontrado
     sprites.destroy(diario)
@@ -87,22 +167,59 @@ def recogerDiario():
     game.show_long_text("¡Encontraste el diario!", DialogLayout.BOTTOM)
 
 def on_right_pressed():
+    global direccionNena
     animation.run_image_animation(nena,
         assets.animation("""
             nena-animation-right
             """),
         500,
         False)
+    direccionNena = "derecha"
 controller.right.on_event(ControllerButtonEvent.PRESSED, on_right_pressed)
 
 def on_left_pressed():
+    global direccionNena
     animation.run_image_animation(nena,
         assets.animation("""
             nena-animation-left
             """),
         500,
         False)
+    direccionNena = "izquierda"
 controller.left.on_event(ControllerButtonEvent.PRESSED, on_left_pressed)
+
+def on_a_pressed():
+    global proyectil2
+    if misionLyraActiva == True:
+        proyectil2 = sprites.create(img("""
+                . . . . . . . . . . . . . . . .
+                . . . . . . . . . . . . . . . .
+                . . . . . . . . . . . . . . . .
+                . . . . . . . . . . . . . . . .
+                . . . . . . . . . . . . . . . .
+                . . . . . . . . . . . . . . . .
+                . . . . . . . 4 4 . . . . . . .
+                . . . . . . 4 5 5 4 . . . . . .
+                . . . . . . 2 5 5 2 . . . . . .
+                . . . . . . . 2 2 . . . . . . .
+                . . . . . . . . . . . . . . . .
+                . . . . . . . . . . . . . . . .
+                . . . . . . . . . . . . . . . .
+                . . . . . . . . . . . . . . . .
+                . . . . . . . . . . . . . . . .
+                . . . . . . . . . . . . . . . .
+                """),
+            SpriteKind.projectile)
+        proyectil2.set_position(nena.x, nena.y)
+        if direccionNena == "abajo":
+            proyectil2.set_velocity(0, 150)
+        elif direccionNena == "arriba":
+            proyectil2.set_velocity(0, -150)
+        elif direccionNena == "izquierda":
+            proyectil2.set_velocity(-150, 0)
+        elif direccionNena == "derecha":
+            proyectil2.set_velocity(150, 0)
+controller.A.on_event(ControllerButtonEvent.PRESSED, on_a_pressed)
 
 def hablarConHerrero():
     global hablandoConHerrero, respuesta, misionHerreroActiva, puede_hablar_lyra
@@ -150,9 +267,11 @@ def hablarConHerrero():
         game.show_long_text("Mi abuelo forjó una caja especial. Para el Alquimista Valerio.",
             DialogLayout.BOTTOM)
         game.show_long_text("Tenía tres cerraduras mágicas...", DialogLayout.BOTTOM)
-        game.show_long_text("Yo guardo la primera llave.", DialogLayout.BOTTOM)
+        game.show_long_text("Yo guardo la primera llave. Ahora es tuya.",
+            DialogLayout.BOTTOM)
         game.show_long_text("La segunda está con Lyra.", DialogLayout.BOTTOM)
-        game.show_long_text("Ve a verla en el bosque.", DialogLayout.BOTTOM)
+        game.show_long_text("Ve a verla en el bosque para conseguir la llave.",
+            DialogLayout.BOTTOM)
         puede_hablar_lyra = True
     elif randint(0, 100) < 50:
         game.show_long_text("Herrero: ¿Ya miraste dentro de la mazmorra?",
@@ -162,22 +281,24 @@ def hablarConHerrero():
         game.show_long_text("Herrero: ¿Ya encontraste los minerales?",
             DialogLayout.BOTTOM)
 
-def on_on_overlap2(sprite2, otherSprite2):
+def on_on_overlap3(sprite2, otherSprite2):
     global objeto
     if otherSprite2 == diario:
         recogerDiario()
     elif otherSprite2 == mineral1 or (otherSprite2 == mineral2 or otherSprite2 == mineral3):
         objeto = otherSprite2
         recogerMinerales()
-sprites.on_overlap(SpriteKind.player, SpriteKind.Loot, on_on_overlap2)
+sprites.on_overlap(SpriteKind.player, SpriteKind.Loot, on_on_overlap3)
 
 def on_up_pressed():
+    global direccionNena
     animation.run_image_animation(nena,
         assets.animation("""
             nena-animation-up
             """),
         500,
         False)
+    direccionNena = "arriba"
 controller.up.on_event(ControllerButtonEvent.PRESSED, on_up_pressed)
 
 def hablarConSabio():
@@ -231,6 +352,13 @@ def hablarConSabio():
         game.show_long_text("Allí debe estar.", DialogLayout.BOTTOM)
     else:
         game.show_long_text("Sabio: ¿Ya lo encontrase?", DialogLayout.BOTTOM)
+def limpiarMonstruos():
+    global monstruosEnMapa, barras
+    for i in range(len(monstruosEnMapa)):
+        sprites.destroy(monstruosEnMapa[i])
+        sprites.destroy(barras[i])
+    monstruosEnMapa = []
+    barras = []
 def crearMapa():
     global misionSabioActiva, hablandoConSabio, diarioEncontrado, sabio, lyra, nena, herrero, casaSabio, arbol1, arbol2, arbol3, casaHerrero
     misionSabioActiva = False
@@ -536,7 +664,7 @@ def recogerMinerales():
         music.play(music.melody_playable(music.ba_ding),
             music.PlaybackMode.UNTIL_DONE)
         minerales_recogidos = minerales_recogidos + 1
-        game.show_long_text("¡Mineral" + str(minerales_recogidos) + "/3!",
+        game.show_long_text("¡Mineral" + ("" + str(minerales_recogidos)) + "/3!",
             DialogLayout.BOTTOM)
 def crearMinerales():
     global mineral1, mineral2, mineral3
@@ -605,7 +733,6 @@ arbol3: Sprite = None
 arbol2: Sprite = None
 arbol1: Sprite = None
 casaSabio: Sprite = None
-lyra: Sprite = None
 hablandoConSabio = 0
 misionSabioActiva = False
 objeto: Sprite = None
@@ -616,15 +743,27 @@ hablandoConHerrero = 0
 minerales_recogidos = 0
 misionHerreroActiva = False
 puede_hablar_herrero = False
+proyectil2: Sprite = None
 diarioEncontrado = False
 respuesta = False
 hablandoConLyra = 0
 misionLyraActiva = False
 puede_hablar_lyra = False
+barra2: StatusBarSprite = None
+monstruo: Sprite = None
+direccionNena = ""
 nena: Sprite = None
 diario: Sprite = None
+lyra: Sprite = None
 herrero: Sprite = None
 sabio: Sprite = None
+monstruos_matados2 = 0
+barras: List[StatusBarSprite] = []
+j = 0
+enemy_index2 = 0
+enemy_index = 0
+i = 0
+monstruosEnMapa: List[Sprite] = []
 scene.set_background_image(img("""
     7777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777
     7777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777
@@ -749,3 +888,9 @@ scene.set_background_image(img("""
     """))
 game.splash("El Legado del Alquimista", "Habla con los NPCs")
 crearMapa()
+
+def on_update_interval():
+    if misionLyraActiva == True:
+        if len(monstruosEnMapa) < 5:
+            crearMonstruos()
+game.on_update_interval(3000, on_update_interval)
