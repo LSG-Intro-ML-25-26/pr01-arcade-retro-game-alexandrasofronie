@@ -45,7 +45,7 @@ def on_on_overlap2(sprite, otherSprite):
 sprites.on_overlap(SpriteKind.player, SpriteKind.NPC, on_on_overlap2)
 
 def crearCofre():
-    global cofre
+    global cofre, cofre1, cofre2, cofre3, cofre4, cofre5
     cofre = sprites.create(img("""
             . . b b b b b b b b b b b b . .
             . b e 5 5 5 5 5 5 5 5 5 5 e b .
@@ -65,13 +65,75 @@ def crearCofre():
             . b b . . . . . . . . . . b b .
             """),
         SpriteKind.Loot)
-    tiles.place_on_tile(cofre, tiles.get_tile_location(34, 5))
+    tiles.place_on_tile(cofre, tiles.get_tile_location(33, 7))
+    cofre1 = sprites.create(assets.image("""
+        cofre1
+        """), SpriteKind.Loot)
+    cofre2 = sprites.create(assets.image("""
+        cofre0
+        """), SpriteKind.Loot)
+    cofre3 = sprites.create(assets.image("""
+        cofre2
+        """), SpriteKind.Loot)
+    cofre4 = sprites.create(assets.image("""
+        cofre3
+        """), SpriteKind.Loot)
+    cofre5 = sprites.create(assets.image("""
+        cofre4
+        """), SpriteKind.Loot)
+    tiles.place_on_tile(cofre1, tiles.get_tile_location(49, 10))
+    tiles.place_on_tile(cofre2, tiles.get_tile_location(49, 4))
+    tiles.place_on_tile(cofre3, tiles.get_tile_location(54, 12))
+    tiles.place_on_tile(cofre4, tiles.get_tile_location(58, 6))
+    tiles.place_on_tile(cofre5, tiles.get_tile_location(58, 12))
 def crearDiario():
     global diario
     diario = sprites.create(assets.image("""
         diario
         """), SpriteKind.Loot)
     tiles.place_on_tile(diario, tiles.get_tile_location(11, 23))
+def abrirCofre():
+    global cofreAbierto, cofreAbierto1
+    sprites.destroy(cofre)
+    cofreAbierto = sprites.create(img("""
+            . b b b b b b b b b b b b b b .
+            b 4 5 5 5 5 5 5 5 5 5 5 5 5 5 b
+            b 4 5 5 5 5 5 5 5 5 5 5 5 5 4 b
+            b 4 4 5 5 5 5 5 5 5 5 5 5 4 4 b
+            b b b b b b b d d b b b b b b b
+            . b b b b b b c c b b b b b b .
+            b c c c c c b c c b c c c c c b
+            b c c c c c c b b c c c c c c b
+            b c c c c c c c c c c c c c c b
+            b c c c c c c c c c c c c c c b
+            b b b b b b b b b b b b b b b b
+            b 4 4 4 5 5 5 5 5 5 5 5 5 5 5 b
+            b 4 4 4 4 4 5 5 5 5 5 5 5 5 5 b
+            b c 4 4 4 4 4 4 5 5 5 5 5 5 c b
+            b b b b b b b b b b b b b b b b
+            . b b . . . . . . . . . . b b .
+            """),
+        SpriteKind.Decoracion)
+    tiles.place_on_tile(cofreAbierto, tiles.get_tile_location(33, 7))
+    cofreAbierto1 = sprites.create(img("""
+            . . . . . . . . . . . . . . . .
+            . . . . . . . . . . . . . . . .
+            . . . . . . . . . . . . . . . .
+            . . . . . . . . . . . . . . . .
+            . . . . . . . . . . . . . . . .
+            . . . . . . . . . . . . . . . .
+            . . . . . . . . . . . . . . . .
+            . . . . . . . . . . . . . . . .
+            . . . . . . . . . . . . . . . .
+            . . . . . . . . . . . . . . . .
+            . . . . . . . . . . . . . . . .
+            . . . . . . . . . . . . . . . .
+            . . . . . . . . . . . . . . . .
+            . . . . . . . . . . . . . . . .
+            . . . . . . . . . . . . . . . .
+            . . . . . . . . . . . . . . . .
+            """),
+        SpriteKind.Decoracion)
 
 def on_down_pressed():
     global direccionNena
@@ -175,11 +237,15 @@ def hablarConLyra():
         misionLyraActiva = False
         hablandoConLyra = 5
         pause(500)
+        crearCofre()
         game.show_long_text("Lyra: Como prometí, aquí tienes la llave.",
             DialogLayout.BOTTOM)
         game.show_long_text("Lyra: Esta es la segunda llave del cofre del Alquimista.",
             DialogLayout.BOTTOM)
-        game.show_long_text("Lyra: La tercera cerca del lago..", DialogLayout.BOTTOM)
+        game.show_long_text("Lyra: Para conseguir la tercera habla con el Guardian...",
+            DialogLayout.BOTTOM)
+        game.show_long_text("Lyra: Lo encontrarás dentro de la mazmorra.",
+            DialogLayout.BOTTOM)
         info.set_score(2)
         puede_hablar_guardian = True
     elif randint(0, 100) < 50:
@@ -197,7 +263,6 @@ def hablarGuardian():
         return
     if misionGuardianActiva == False:
         if hablandoConGuardian == 0:
-            game.show_long_text("Guardián: Yo ", DialogLayout.BOTTOM)
             game.show_long_text("Guardián: Veo que tienes las dos llaves...",
                 DialogLayout.BOTTOM)
             game.show_long_text("Pero la tercera está en el Laberinto.", DialogLayout.BOTTOM)
@@ -209,9 +274,9 @@ def hablarGuardian():
             respuesta = game.ask("ENTRAR AL LABERINTO", "TENER MIEDO")
             if respuesta:
                 misionGuardianActiva = True
+                activarPortal()
                 game.show_long_text("Debes entrar en el portal.", DialogLayout.BOTTOM)
                 hablandoConGuardian = 3
-                activarPortal()
             else:
                 game.show_long_text("Vuelve cuando tengas valor.", DialogLayout.BOTTOM)
                 hablandoConGuardian = 4
@@ -219,11 +284,11 @@ def hablarGuardian():
             game.show_long_text("Busca la última llave.", DialogLayout.BOTTOM)
         else:
             if hablandoConGuardian == 4:
-                game.show_long_text("Guardian: ¿Quieres saber que estonde este cofre?",
+                game.show_long_text("Guardian: ¿Quieres saber que esconde este cofre?",
                     DialogLayout.BOTTOM)
                 hablandoConGuardian = 2
             if hablandoConGuardian == 5:
-                game.splash("")
+                game.splash("FIN")
     elif llaveEncontrada == True:
         music.play(music.melody_playable(music.ba_ding),
             music.PlaybackMode.UNTIL_DONE)
@@ -364,6 +429,8 @@ def on_on_overlap3(sprite2, otherSprite2):
     elif otherSprite2 == mineral1 or (otherSprite2 == mineral2 or otherSprite2 == mineral3):
         objeto = otherSprite2
         recogerMinerales()
+    elif llaveEncontrada == True and otherSprite2 == cofre:
+        abrirCofre()
 sprites.on_overlap(SpriteKind.player, SpriteKind.Loot, on_on_overlap3)
 
 def on_up_pressed():
@@ -379,11 +446,9 @@ controller.up.on_event(ControllerButtonEvent.PRESSED, on_up_pressed)
 
 def on_on_overlap4(sprite3, otherSprite3):
     global llaveEncontrada
+    sprites.destroy(portal)
     if otherSprite3 == portal:
-        tiles.set_current_tilemap(tilemap("""
-            nivel
-            """))
-        tiles.place_on_tile(nena, tiles.get_tile_location(10, 6))
+        tiles.place_on_tile(nena, tiles.get_tile_location(53, 5))
         llaveEncontrada = False
 sprites.on_overlap(SpriteKind.player, SpriteKind.Decoracion, on_on_overlap4)
 
@@ -455,7 +520,7 @@ def activarPortal():
     portal = sprites.create(assets.image("""
         portal
         """), SpriteKind.Decoracion)
-    tiles.place_on_tile(portal, tiles.get_tile_location(35, 5))
+    tiles.place_on_tile(portal, tiles.get_tile_location(34, 4))
 def crearMapa():
     global misionSabioActiva, hablandoConSabio, diarioEncontrado, sabio, lyra, nena, herrero, guardian, casaSabio, arbol1, arbol2, arbol3, casaHerrero
     misionSabioActiva = False
@@ -652,7 +717,7 @@ def crearMapa():
     tiles.place_on_tile(sabio, tiles.get_tile_location(3, 3))
     tiles.place_on_tile(casaSabio, tiles.get_tile_location(3, 1))
     tiles.place_on_tile(herrero, tiles.get_tile_location(14, 3))
-    tiles.place_on_tile(guardian, tiles.get_tile_location(33, 5))
+    tiles.place_on_tile(guardian, tiles.get_tile_location(32, 7))
     tiles.place_on_tile(casaHerrero, tiles.get_tile_location(14, 1))
     tiles.place_on_tile(lyra, tiles.get_tile_location(3, 21))
     tiles.place_on_tile(nena, tiles.get_tile_location(3, 5))
@@ -885,7 +950,14 @@ barra2: StatusBarSprite = None
 monstruo: Sprite = None
 direccionNena = ""
 nena: Sprite = None
+cofreAbierto1: Sprite = None
+cofreAbierto: Sprite = None
 diario: Sprite = None
+cofre5: Sprite = None
+cofre4: Sprite = None
+cofre3: Sprite = None
+cofre2: Sprite = None
+cofre1: Sprite = None
 cofre: Sprite = None
 lyra: Sprite = None
 herrero: Sprite = None

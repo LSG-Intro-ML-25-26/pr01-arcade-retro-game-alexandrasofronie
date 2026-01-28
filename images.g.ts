@@ -215,6 +215,232 @@ c6b66bb6c88888666888886c6bb66b6c.
 ..ccccc...666.....666....ccccc...
 .................................
 `;
+            case "image7":
+            case "cofre1":return img`
+. . b b b b b b b b b b b b . . 
+. b e 2 2 2 2 2 2 2 2 2 2 e b . 
+b e 2 2 2 2 2 2 2 2 2 2 2 2 e b 
+b e 2 2 2 2 2 2 2 2 2 2 2 2 e b 
+b e 2 2 2 2 2 2 2 2 2 2 2 2 e b 
+b e e 2 2 2 2 2 2 2 2 2 2 e e b 
+b e e e e e e e e e e e e e e b 
+b e e e e e e e e e e e e e e b 
+b b b b b b b d d b b b b b b b 
+c b b b b b b c c b b b b b b c 
+c c c c c c b c c b c c c c c c 
+b 2 2 2 e e c b b c e e e e e b 
+b 2 2 2 2 e e e e e e e e e e b 
+b c 2 2 2 2 e e e e e e e e c b 
+b b b b b b b b b b b b b b b b 
+. b b . . . . . . . . . . b b . 
+`;
+            case "image11":
+            case "cofre0":return img`
+. . b b b b b b b b b b b b . . 
+. b e 8 8 8 8 8 8 8 8 8 8 e b . 
+b e 8 8 8 8 8 8 8 8 8 8 8 8 e b 
+b e 8 8 8 8 8 8 8 8 8 8 8 8 e b 
+b e 8 8 8 8 8 8 8 8 8 8 8 8 e b 
+b e e 8 8 8 8 8 8 8 8 8 8 e e b 
+b e e e e e e e e e e e e e e b 
+b e e e e e e e e e e e e e e b 
+b b b b b b b d d b b b b b b b 
+c b b b b b b c c b b b b b b c 
+c c c c c c b c c b c c c c c c 
+b e e e e e c b b c e e e 8 8 b 
+b e e e e e e e e e e e 8 8 8 b 
+b c e e e e e e e e e 8 8 8 c b 
+b b b b b b b b b b b b b b b b 
+. b b . . . . . . . . . . b b . 
+`;
+            case "image12":
+            case "cofre2":return img`
+. . b b b b b b b b b b b b . . 
+. b e 6 6 6 6 6 6 6 6 6 6 e b . 
+b e 6 6 6 6 6 6 6 6 6 6 6 6 e b 
+b e 6 6 6 6 6 6 6 6 6 6 6 6 e b 
+b e 6 6 6 6 6 6 6 6 6 6 6 6 e b 
+b e e 6 6 6 6 6 6 6 6 6 6 e e b 
+b e e e e e e e e e e e e e e b 
+b e e e e e e e e e e e e e e b 
+b b b b b b b d d b b b b b b b 
+c b b b b b b c c b b b b b b c 
+c c c c c c b c c b c c c c c c 
+b 6 6 e e e c b b c e e e e e b 
+b 6 6 6 e e e e e e e e e e e b 
+b c 6 6 6 e e e e e e e e e c b 
+b b b b b b b b b b b b b b b b 
+. b b . . . . . . . . . . b b . 
+`;
+            case "image14":
+            case "cofre4":return img`
+. . b b b b b b b b b b b b . . 
+. b e 5 5 5 5 5 5 5 5 5 5 e b . 
+b e 5 5 5 5 5 5 5 5 5 5 5 5 e b 
+b e 5 5 5 5 5 5 5 5 5 5 5 5 e b 
+b e 5 5 5 5 5 5 5 5 5 5 5 5 e b 
+b e e 5 5 5 5 5 5 5 5 5 5 e e b 
+b e e e e e e e e e e e e e e b 
+b e e e e e e e e e e e e e e b 
+b b b b b b b d d b b b b b b b 
+c b b b b b b c c b b b b b b c 
+c c c c c c b c c b c c c c c c 
+b 5 5 5 e e c b b c e e e e e b 
+b 5 5 5 5 e e e e e e e e e e b 
+b c 5 5 5 5 5 e e e e e e e c b 
+b b b b b b b b b b b b b b b b 
+. b b . . . . . . . . . . b b . 
+`;
+            case "image13":
+            case "cofre3":return img`
+. . b b b b b b b b b b b b . . 
+. b e a a a a a a a a a a e b . 
+b e a a a a a a a a a a a a e b 
+b e a a a a a a a a a a a a e b 
+b e a a a a a a a a a a a a e b 
+b e e a a a a a a a a a a e e b 
+b e e e e e e e e e e e e e e b 
+b e e e e e e e e e e e e e e b 
+b b b b b b b d d b b b b b b b 
+c b b b b b b c c b b b b b b c 
+c c c c c c b c c b c c c c c c 
+b a a e e e c b b c e e e e e b 
+b a a a a e e e e e e e e e e b 
+b a a a a a e e e e e e e e c b 
+b b b b b b b b b b b b b b b b 
+. b b . . . . . . . . . . b b . 
+`;
+            case "image18":
+            case "cofreabierto3":return img`
+. b b b b b b b b b b b b b b . 
+b e 2 2 2 2 2 2 2 2 2 2 2 2 2 b 
+b e 2 2 2 2 2 2 2 2 2 2 2 2 e b 
+b e e 2 2 2 2 2 2 2 2 2 2 e e b 
+b b b b b b b d d b b b b b b b 
+. b b b b b b c c b b b b b b . 
+b c c c c c b c c b c c c c c b 
+b c c c c c c b b c c c c c c b 
+b c c c c c c c c c c c c c c b 
+b c c c c c c c c c c c c c c b 
+b b b b b b b b b b b b b b b b 
+b 2 2 2 e e e e e e e e e e e b 
+b 2 2 2 2 e e e e e e e e e e b 
+b c 2 2 2 2 e e e e e e e e c b 
+b b b b b b b b b b b b b b b b 
+. b b . . . . . . . . . . b b . 
+`;
+            case "image16":
+            case "cofreabierto0":return img`
+. b b b b b b b b b b b b b b . 
+b e 8 8 8 8 8 8 8 8 8 8 8 8 8 b 
+b e 8 8 8 8 8 8 8 8 8 8 8 8 e b 
+b e e 8 8 8 8 8 8 8 8 8 8 e e b 
+b b b b b b b d d b b b b b b b 
+. b b b b b b c c b b b b b b . 
+b c c c c c b c c b c c c c c b 
+b c c c c c c b b c c c c c c b 
+b c c c c c c c c c c c c c c b 
+b c c c c c c c c c c c c c c b 
+b b b b b b b b b b b b b b b b 
+b e e e e e e e e e e e e 8 8 b 
+b e e e e e e e e e e e 8 8 8 b 
+b c e e e e e e e e e 8 8 8 c b 
+b b b b b b b b b b b b b b b b 
+. b b . . . . . . . . . . b b . 
+`;
+            case "image19":
+            case "cofreabierto4":return img`
+. b b b b b b b b b b b b b b . 
+b e 6 6 6 6 6 6 6 6 6 6 6 6 6 b 
+b e 6 6 6 6 6 6 6 6 6 6 6 6 e b 
+b e e 6 6 6 6 6 6 6 6 6 6 e e b 
+b b b b b b b d d b b b b b b b 
+. b b b b b b c c b b b b b b . 
+b c c c c c b c c b c c c c c b 
+b c c c c c c b b c c c c c c b 
+b c c c c c c c c c c c c c c b 
+b c c c c c c c c c c c c c c b 
+b b b b b b b b b b b b b b b b 
+b 6 6 e e e e e e e e e e e e b 
+b 6 6 6 e e e e e e e e e e e b 
+b c 6 6 6 e e e e e e e e e c b 
+b b b b b b b b b b b b b b b b 
+. b b . . . . . . . . . . b b . 
+`;
+            case "image17":
+            case "cofreabierto2":return img`
+. b b b b b b b b b b b b b b . 
+b e a a a a a a a a a a a a a b 
+b e a a a a a a a a a a a a e b 
+b e e a a a a a a a a a a e e b 
+b b b b b b b d d b b b b b b b 
+. b b b b b b c c b b b b b b . 
+b c c c c c b c c b c c c c c b 
+b c c c c c c b b c c c c c c b 
+b c c c c c c c c c c c c c c b 
+b c c c c c c c c c c c c c c b 
+b b b b b b b b b b b b b b b b 
+b a a e e e e e e e e e e e e b 
+b a a a a e e e e e e e e e e b 
+b c a a a a e e e e e e e e c b 
+b b b b b b b b b b b b b b b b 
+. b b . . . . . . . . . . b b . 
+`;
+            case "image15":
+            case "cofreabierto1":return img`
+. b b b b b b b b b b b b b b . 
+b e 5 5 5 5 5 5 5 5 5 5 5 5 5 b 
+b e 5 5 5 5 5 5 5 5 5 5 5 5 e b 
+b e e 5 5 5 5 5 5 5 5 5 5 e e b 
+b b b b b b b d d b b b b b b b 
+. b b b b b b c c b b b b b b . 
+b c c c c c b c c b c c c c c b 
+b c c c c c c b b c c c c c c b 
+b c c c c c c c c c c c c c c b 
+b c c c c c c c c c c c c c c b 
+b b b b b b b b b b b b b b b b 
+b 5 5 5 e e e e e e e e e e e b 
+b 5 5 5 5 e e e e e e e e e e b 
+b c 5 5 5 5 5 e e e e e e e c b 
+b b b b b b b b b b b b b b b b 
+. b b . . . . . . . . . . b b . 
+`;
+            case "image20":
+            case "portal0":return img`
+..ccccc....666.....666...ccccc...
+.c66b66c..68886...68886.c66b66c..
+c6b66bb6c68888866688888c6bb66b6c.
+c66b66b6c88111888881118c6b66b66c.
+cb66b66bc81888188818881cb66b66bc.
+c6b66bbbcb88a881118888bcbbb66b6c.
+c6bb6bbd1b777777777778b1dbb6bb6c.
+.c66bbd1777888888888877b1dbb66c..
+..cccc177a88877777788877b1cccc...
+.6881777a8877788aa7777877bb886...
+688187aa88778888888887787a81886..
+688177a8a77888888888887777881886.
+68817a8778888a777788888787881886.
+.6881a87a88877888778888787881886.
+..68817788877888887788878781886..
+..68817a8877888888878887871886...
+..68817a8878888888778887877886...
+.68818778878888a777888878a7886...
+688188a788788888888888778a71886..
+68818887787788888888887a87781886.
+6881888a78877888888887a887a81886.
+.6881888778a77888887778877881886.
+..688bb8a77887777777a8877bb1886..
+..cccc1b8877888888888777b1cccc...
+.c66bbd1b8a777a88887778b1dbb66c..
+c6bb6bbd1b888777777888b1dbb6bb6c.
+c6b66bbbcb888811188888bcbbb66b6c.
+cb66b66bc18881888188818cb66b66bc.
+c66b66b6c81118888811188c6b66b66c.
+c6b66bb6c88888666888886c6bb66b6c.
+.c66b66c.68886...68886..c66b66c..
+..ccccc...666.....666....ccccc...
+.................................
+`;
         }
         return null;
     })
