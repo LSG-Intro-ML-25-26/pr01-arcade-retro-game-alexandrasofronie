@@ -212,22 +212,25 @@ function hablarGuardian () {
                 activarPortal()
                 game.showLongText("Debes entrar en el portal.", DialogLayout.Bottom)
             } else {
-                game.showLongText("Vuelve cuando tengas valor.", DialogLayout.Bottom)
-                hablandoConGuardian = 4
+                game.showLongText("Guardian: Vuelve cuando estes listo...", DialogLayout.Bottom)
+                hablandoConGuardian = 3
             }
         } else {
-            if (hablandoConGuardian == 4) {
+            if (hablandoConGuardian == 3) {
                 game.showLongText("Guardian: ¿Quieres saber que esconde este cofre?", DialogLayout.Bottom)
                 hablandoConGuardian = 2
+            }
+            if (hablandoConGuardian == 4) {
+                game.showLongText("Guardián: Ya puedes abrir el cofre del Alquimista.", DialogLayout.Bottom)
+                puede_abrir_cofre = true
             }
         }
     } else if (llaveEncontrada == true) {
         music.play(music.melodyPlayable(music.baDing), music.PlaybackMode.UntilDone)
         game.showLongText("¡Tienes la tercera llave!", DialogLayout.Bottom)
         misionGuardianActiva = false
+        hablandoConGuardian = 4
         pause(500)
-        game.showLongText("Guardián: Ya puedes abrir el cofre del Alquimista.", DialogLayout.Bottom)
-        puede_abrir_cofre = true
     }
 }
 function recogerDiario () {
@@ -417,7 +420,7 @@ function abrirCofres () {
         music.play(music.melodyPlayable(music.baDing), music.PlaybackMode.UntilDone)
         llaveEncontrada = true
         tiles.placeOnTile(cofreAbierto5, tiles.getTileLocation(49, 10))
-        game.splash("Encontraste la llave! Busca el portal para salir.")
+        game.splash("Encontraste la llave!", "Busca el portal para salir.")
         info.setScore(3)
         activarPortal2()
     }
