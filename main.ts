@@ -43,8 +43,31 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.NPC, function (sprite, otherSpri
         hablarConHerrero()
     } else if (otherSprite == lyra) {
         hablarConLyra()
+    } else {
+        hablarGuardian()
     }
 })
+function crearCofre () {
+    cofre = sprites.create(img`
+        . . b b b b b b b b b b b b . . 
+        . b e 5 5 5 5 5 5 5 5 5 5 e b . 
+        b e 4 5 5 5 5 5 5 5 5 5 5 5 e b 
+        b e 4 4 5 5 5 5 5 5 5 5 5 5 e b 
+        b e 4 4 4 5 5 5 5 5 5 5 5 5 e b 
+        b e e 4 4 4 5 5 5 5 5 5 5 e e b 
+        b e e e e e e e e e e e e e e b 
+        b e e e e e e e e e e e e e e b 
+        b b b b b b b d d b b b b b b b 
+        c b b b b b b c c b b b b b b c 
+        c c c c c c b c c b c c c c c c 
+        b 4 4 5 5 5 c b b c 5 5 5 5 5 b 
+        b 4 4 4 4 5 5 5 5 5 5 5 5 5 5 b 
+        b c 4 4 4 4 5 5 5 5 5 5 5 5 c b 
+        b b b b b b b b b b b b b b b b 
+        . b b . . . . . . . . . . b b . 
+        `, SpriteKind.Loot)
+    tiles.placeOnTile(cofre, tiles.getTileLocation(34, 5))
+}
 function crearDiario () {
     diario = sprites.create(assets.image`diario`, SpriteKind.Loot)
     tiles.placeOnTile(diario, tiles.getTileLocation(11, 23))
@@ -143,15 +166,62 @@ function hablarConLyra () {
         misionLyraActiva = false
         hablandoConLyra = 5
         pause(500)
+        crearCofre()
         game.showLongText("Lyra: Como prometí, aquí tienes la llave.", DialogLayout.Bottom)
         game.showLongText("Lyra: Esta es la segunda llave del cofre del Alquimista.", DialogLayout.Bottom)
         game.showLongText("Lyra: La tercera cerca del lago..", DialogLayout.Bottom)
         info.setScore(2)
+        puede_hablar_guardian = true
     } else if (randint(0, 100) < 50) {
         game.showLongText("Lyra: ¿Cómo va la caza?", DialogLayout.Bottom)
         game.showLongText("Lyra: Llevas " + ("" + monstruos_matados2) + "/10 criaturas.", DialogLayout.Bottom)
     } else {
         game.showLongText("Lyra: Las criaturas aparecen por todo el bosque.", DialogLayout.Bottom)
+    }
+}
+function hablarGuardian () {
+    if (puede_hablar_guardian == false) {
+        game.showLongText("Primero necesitas 2 llaves.", DialogLayout.Bottom)
+        game.showLongText("Consiguelas y podremos hablar.", DialogLayout.Bottom)
+        return
+    }
+    if (misionGuardianActiva == false) {
+        if (hablandoConGuardian == 0) {
+            game.showLongText("Guardián: Veo que tienes las dos llaves...", DialogLayout.Bottom)
+            game.showLongText("Pero la tercera está en el Laberinto.", DialogLayout.Bottom)
+            hablandoConGuardian = 1
+        } else if (hablandoConGuardian == 1) {
+            game.showLongText("¿Te atreves a entrar?", DialogLayout.Bottom)
+            hablandoConGuardian = 2
+        } else if (hablandoConGuardian == 2) {
+            respuesta = game.ask("ENTRAR AL LABERINTO", "TENER MIEDO")
+            if (respuesta) {
+                misionGuardianActiva = true
+                game.showLongText("Debes entrar en el portal.", DialogLayout.Bottom)
+                hablandoConGuardian = 3
+            } else {
+                game.showLongText("Vuelve cuando tengas valor.", DialogLayout.Bottom)
+                hablandoConGuardian = 4
+            }
+        } else if (hablandoConGuardian == 3) {
+            game.showLongText("Busca la última llave.", DialogLayout.Bottom)
+            activarPortal()
+        } else {
+            if (hablandoConGuardian == 4) {
+                game.showLongText("Guardian: ¿Quieres saber que esconde este cofre?", DialogLayout.Bottom)
+                hablandoConGuardian = 2
+            }
+            if (hablandoConGuardian == 5) {
+                game.splash("FIN")
+            }
+        }
+    } else if (llaveEncontrada == true) {
+        music.play(music.melodyPlayable(music.baDing), music.PlaybackMode.UntilDone)
+        game.showLongText("¡Tienes la tercera llave!", DialogLayout.Bottom)
+        misionGuardianActiva = false
+        pause(500)
+        game.showLongText("Guardián: Ya puedes abrir el cofre del Alquimista.", DialogLayout.Bottom)
+        hablandoConGuardian = 5
     }
 }
 function recogerDiario () {
@@ -180,7 +250,7 @@ controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
 })
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     if (misionLyraActiva == true) {
-        proyectil2 = sprites.create(img`
+        proyectil22 = sprites.create(img`
             . . . . . . . . . . . . . . . . 
             . . . . . . . . . . . . . . . . 
             . . . . . . . . . . . . . . . . 
@@ -198,15 +268,15 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
             . . . . . . . . . . . . . . . . 
             . . . . . . . . . . . . . . . . 
             `, SpriteKind.Projectile)
-        proyectil2.setPosition(nena.x, nena.y)
+        proyectil22.setPosition(nena.x, nena.y)
         if (direccionNena == "abajo") {
-            proyectil2.setVelocity(0, 150)
+            proyectil22.setVelocity(0, 150)
         } else if (direccionNena == "arriba") {
-            proyectil2.setVelocity(0, -150)
+            proyectil22.setVelocity(0, -150)
         } else if (direccionNena == "izquierda") {
-            proyectil2.setVelocity(-150, 0)
+            proyectil22.setVelocity(-150, 0)
         } else if (direccionNena == "derecha") {
-            proyectil2.setVelocity(150, 0)
+            proyectil22.setVelocity(150, 0)
         }
     }
 })
@@ -271,6 +341,8 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Loot, function (sprite2, otherSp
     } else if (otherSprite2 == mineral1 || (otherSprite2 == mineral2 || otherSprite2 == mineral3)) {
         objeto = otherSprite2
         recogerMinerales()
+    } else if (false) {
+    	
     }
 })
 controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
@@ -281,6 +353,13 @@ controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
     false
     )
     direccionNena = "arriba"
+})
+sprites.onOverlap(SpriteKind.Player, SpriteKind.Decoracion, function (sprite, otherSprite) {
+    sprites.destroy(portal)
+    if (otherSprite == portal) {
+        tiles.placeOnTile(nena, tiles.getTileLocation(53, 5))
+        llaveEncontrada = false
+    }
 })
 function hablarConSabio () {
     if (misionSabioActiva == false) {
@@ -332,12 +411,20 @@ function hablarConSabio () {
     }
 }
 function limpiarMonstruos () {
-    for (let i = 0; i <= monstruosEnMapa.length - 1; i++) {
+    while (i <= monstruosEnMapa.length - 1) {
         sprites.destroy(monstruosEnMapa[i])
         sprites.destroy(barras[i])
+        i += 1
     }
     monstruosEnMapa = []
     barras = []
+}
+scene.onHitWall(SpriteKind.Projectile, function (proyectil2, location) {
+    sprites.destroy(proyectil2)
+})
+function activarPortal () {
+    portal = sprites.create(assets.image`portal`, SpriteKind.Decoracion)
+    tiles.placeOnTile(portal, tiles.getTileLocation(35, 5))
 }
 function crearMapa () {
     misionSabioActiva = false
@@ -347,6 +434,32 @@ function crearMapa () {
     lyra = sprites.create(assets.image`lyra`, SpriteKind.NPC)
     nena = sprites.create(assets.image`nena-front`, SpriteKind.Player)
     herrero = sprites.create(assets.image`herrero`, SpriteKind.NPC)
+    guardian = sprites.create(img`
+        ......ffff..............
+        ....fffb1fff............
+        ...fffbbb1fff...........
+        ..fff1bb1b1fff..........
+        ..ff1bbbbbb11f..........
+        ..fbbffffffb1f..........
+        ..ffffeeeeffff......ccc.
+        .ffefbf44fbfeff....cddc.
+        .ffefbf44fbfeff...cddc..
+        .fee4dddddd4eef.ccddc...
+        fdfeeddddd4eeffecddc....
+        fbffee4444ee4fddccc.....
+        fbf4fb1bbb1f1edde.......
+        fcf.fbbb1bbf44ee........
+        .ff.f445544f............
+        ....ffffffff............
+        .....ff..ff.............
+        ........................
+        ........................
+        ........................
+        ........................
+        ........................
+        ........................
+        ........................
+        `, SpriteKind.NPC)
     casaSabio = sprites.create(img`
         ....................e4e44e4e....................
         .................444eee44e4e444.................
@@ -488,6 +601,7 @@ function crearMapa () {
     tiles.placeOnTile(sabio, tiles.getTileLocation(3, 3))
     tiles.placeOnTile(casaSabio, tiles.getTileLocation(3, 1))
     tiles.placeOnTile(herrero, tiles.getTileLocation(14, 3))
+    tiles.placeOnTile(guardian, tiles.getTileLocation(33, 5))
     tiles.placeOnTile(casaHerrero, tiles.getTileLocation(14, 1))
     tiles.placeOnTile(lyra, tiles.getTileLocation(3, 21))
     tiles.placeOnTile(nena, tiles.getTileLocation(3, 5))
@@ -690,8 +804,11 @@ let arbol3: Sprite = null
 let arbol2: Sprite = null
 let arbol1: Sprite = null
 let casaSabio: Sprite = null
+let guardian: Sprite = null
+let i = 0
 let hablandoConSabio = 0
 let misionSabioActiva = false
+let portal: Sprite = null
 let objeto: Sprite = null
 let mineral3: Sprite = null
 let mineral2: Sprite = null
@@ -700,8 +817,12 @@ let hablandoConHerrero = 0
 let minerales_recogidos = 0
 let misionHerreroActiva = false
 let puede_hablar_herrero = false
-let proyectil2: Sprite = null
+let proyectil22: Sprite = null
 let diarioEncontrado = false
+let hablandoConGuardian = 0
+let llaveEncontrada = false
+let misionGuardianActiva = false
+let puede_hablar_guardian = false
 let respuesta = false
 let hablandoConLyra = 0
 let misionLyraActiva = false
@@ -711,6 +832,7 @@ let monstruo: Sprite = null
 let direccionNena = ""
 let nena: Sprite = null
 let diario: Sprite = null
+let cofre: Sprite = null
 let lyra: Sprite = null
 let herrero: Sprite = null
 let sabio: Sprite = null
@@ -719,8 +841,8 @@ let barras: StatusBarSprite[] = []
 let monstruosEnMapa: Sprite[] = []
 let k = 0
 let enemy_index = 0
-let enemy_index2 = 0
 let j = 0
+let enemy_index2 = 0
 scene.setBackgroundImage(img`
     7777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777
     7777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777

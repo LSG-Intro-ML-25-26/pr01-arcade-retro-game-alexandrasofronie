@@ -3,17 +3,20 @@ class SpriteKind:
     NPC = SpriteKind.create()
     Decoracion = SpriteKind.create()
     Loot = SpriteKind.create()
+@namespace
+class StatusBarKind:
+    Contador = StatusBarKind.create()
 
 def on_on_overlap(proyectil, enemigo):
-    global enemy_index, i, monstruos_matados2
+    global enemy_index, k, monstruos_matados2
     sprites.destroy(proyectil)
     enemy_index = -1
-    i = 0
-    while i < len(monstruosEnMapa):
-        if monstruosEnMapa[i] == enemigo:
-            enemy_index = i
+    k = 0
+    while k < len(monstruosEnMapa):
+        if monstruosEnMapa[k] == enemigo:
+            enemy_index = k
             break
-        i += 1
+        k += 1
     if enemy_index >= 0:
         barra = barras[enemy_index]
         barra.value -= 1
@@ -27,6 +30,7 @@ def on_on_overlap(proyectil, enemigo):
             monstruosEnMapa.remove_at(enemy_index)
             barras.remove_at(enemy_index)
             monstruos_matados2 = monstruos_matados2 + 1
+            info.change_score_by(1)
 sprites.on_overlap(SpriteKind.projectile, SpriteKind.enemy, on_on_overlap)
 
 def on_on_overlap2(sprite, otherSprite):
@@ -36,8 +40,32 @@ def on_on_overlap2(sprite, otherSprite):
         hablarConHerrero()
     elif otherSprite == lyra:
         hablarConLyra()
+    else:
+        hablarGuardian()
 sprites.on_overlap(SpriteKind.player, SpriteKind.NPC, on_on_overlap2)
 
+def crearCofre():
+    global cofre
+    cofre = sprites.create(img("""
+            . . b b b b b b b b b b b b . .
+            . b e 5 5 5 5 5 5 5 5 5 5 e b .
+            b e 4 5 5 5 5 5 5 5 5 5 5 5 e b
+            b e 4 4 5 5 5 5 5 5 5 5 5 5 e b
+            b e 4 4 4 5 5 5 5 5 5 5 5 5 e b
+            b e e 4 4 4 5 5 5 5 5 5 5 e e b
+            b e e e e e e e e e e e e e e b
+            b e e e e e e e e e e e e e e b
+            b b b b b b b d d b b b b b b b
+            c b b b b b b c c b b b b b b c
+            c c c c c c b c c b c c c c c c
+            b 4 4 5 5 5 c b b c 5 5 5 5 5 b
+            b 4 4 4 4 5 5 5 5 5 5 5 5 5 5 b
+            b c 4 4 4 4 5 5 5 5 5 5 5 5 c b
+            b b b b b b b b b b b b b b b b
+            . b b . . . . . . . . . . b b .
+            """),
+        SpriteKind.Loot)
+    tiles.place_on_tile(cofre, tiles.get_tile_location(34, 5))
 def crearDiario():
     global diario
     diario = sprites.create(assets.image("""
@@ -98,7 +126,7 @@ def crearMonstruos():
     monstruosEnMapa.append(monstruo)
     barras.append(barra2)
 def hablarConLyra():
-    global hablandoConLyra, respuesta, misionLyraActiva
+    global hablandoConLyra, respuesta, misionLyraActiva, puede_hablar_guardian
     if puede_hablar_lyra == False:
         game.show_long_text("Lyra: Habla con el herrero Bron primero.",
             DialogLayout.BOTTOM)
@@ -124,6 +152,7 @@ def hablarConLyra():
                     DialogLayout.BOTTOM)
                 hablandoConLyra = 3
                 crearMonstruos()
+                info.set_score(0)
             else:
                 game.show_long_text("Lyra: Entiendo... vuelve cuando estés listo.",
                     DialogLayout.BOTTOM)
@@ -151,6 +180,8 @@ def hablarConLyra():
         game.show_long_text("Lyra: Esta es la segunda llave del cofre del Alquimista.",
             DialogLayout.BOTTOM)
         game.show_long_text("Lyra: La tercera cerca del lago..", DialogLayout.BOTTOM)
+        info.set_score(2)
+        puede_hablar_guardian = True
     elif randint(0, 100) < 50:
         game.show_long_text("Lyra: ¿Cómo va la caza?", DialogLayout.BOTTOM)
         game.show_long_text("Lyra: Llevas " + ("" + str(monstruos_matados2)) + "/10 criaturas.",
@@ -158,6 +189,50 @@ def hablarConLyra():
     else:
         game.show_long_text("Lyra: Las criaturas aparecen por todo el bosque.",
             DialogLayout.BOTTOM)
+def hablarGuardian():
+    global hablandoConGuardian, respuesta, misionGuardianActiva
+    if puede_hablar_guardian == False:
+        game.show_long_text("Primero necesitas 2 llaves.", DialogLayout.BOTTOM)
+        game.show_long_text("Consiguelas y podremos hablar.", DialogLayout.BOTTOM)
+        return
+    if misionGuardianActiva == False:
+        if hablandoConGuardian == 0:
+            game.show_long_text("Guardián: Yo ", DialogLayout.BOTTOM)
+            game.show_long_text("Guardián: Veo que tienes las dos llaves...",
+                DialogLayout.BOTTOM)
+            game.show_long_text("Pero la tercera está en el Laberinto.", DialogLayout.BOTTOM)
+            hablandoConGuardian = 1
+        elif hablandoConGuardian == 1:
+            game.show_long_text("¿Te atreves a entrar?", DialogLayout.BOTTOM)
+            hablandoConGuardian = 2
+        elif hablandoConGuardian == 2:
+            respuesta = game.ask("ENTRAR AL LABERINTO", "TENER MIEDO")
+            if respuesta:
+                misionGuardianActiva = True
+                game.show_long_text("Debes entrar en el portal.", DialogLayout.BOTTOM)
+                hablandoConGuardian = 3
+                activarPortal()
+            else:
+                game.show_long_text("Vuelve cuando tengas valor.", DialogLayout.BOTTOM)
+                hablandoConGuardian = 4
+        elif hablandoConGuardian == 3:
+            game.show_long_text("Busca la última llave.", DialogLayout.BOTTOM)
+        else:
+            if hablandoConGuardian == 4:
+                game.show_long_text("Guardian: ¿Quieres saber que estonde este cofre?",
+                    DialogLayout.BOTTOM)
+                hablandoConGuardian = 2
+            if hablandoConGuardian == 5:
+                game.splash("")
+    elif llaveEncontrada == True:
+        music.play(music.melody_playable(music.ba_ding),
+            music.PlaybackMode.UNTIL_DONE)
+        game.show_long_text("¡Tienes la tercera llave!", DialogLayout.BOTTOM)
+        misionGuardianActiva = False
+        pause(500)
+        game.show_long_text("Guardián: Ya puedes abrir el cofre del Alquimista.",
+            DialogLayout.BOTTOM)
+        hablandoConGuardian = 5
 def recogerDiario():
     global diarioEncontrado
     sprites.destroy(diario)
@@ -189,9 +264,9 @@ def on_left_pressed():
 controller.left.on_event(ControllerButtonEvent.PRESSED, on_left_pressed)
 
 def on_a_pressed():
-    global proyectil2
+    global proyectil22
     if misionLyraActiva == True:
-        proyectil2 = sprites.create(img("""
+        proyectil22 = sprites.create(img("""
                 . . . . . . . . . . . . . . . .
                 . . . . . . . . . . . . . . . .
                 . . . . . . . . . . . . . . . .
@@ -210,15 +285,15 @@ def on_a_pressed():
                 . . . . . . . . . . . . . . . .
                 """),
             SpriteKind.projectile)
-        proyectil2.set_position(nena.x, nena.y)
+        proyectil22.set_position(nena.x, nena.y)
         if direccionNena == "abajo":
-            proyectil2.set_velocity(0, 150)
+            proyectil22.set_velocity(0, 150)
         elif direccionNena == "arriba":
-            proyectil2.set_velocity(0, -150)
+            proyectil22.set_velocity(0, -150)
         elif direccionNena == "izquierda":
-            proyectil2.set_velocity(-150, 0)
+            proyectil22.set_velocity(-150, 0)
         elif direccionNena == "derecha":
-            proyectil2.set_velocity(150, 0)
+            proyectil22.set_velocity(150, 0)
 controller.A.on_event(ControllerButtonEvent.PRESSED, on_a_pressed)
 
 def hablarConHerrero():
@@ -273,6 +348,7 @@ def hablarConHerrero():
         game.show_long_text("Ve a verla en el bosque para conseguir la llave.",
             DialogLayout.BOTTOM)
         puede_hablar_lyra = True
+        info.set_score(1)
     elif randint(0, 100) < 50:
         game.show_long_text("Herrero: ¿Ya miraste dentro de la mazmorra?",
             DialogLayout.BOTTOM)
@@ -300,6 +376,16 @@ def on_up_pressed():
         False)
     direccionNena = "arriba"
 controller.up.on_event(ControllerButtonEvent.PRESSED, on_up_pressed)
+
+def on_on_overlap4(sprite3, otherSprite3):
+    global llaveEncontrada
+    if otherSprite3 == portal:
+        tiles.set_current_tilemap(tilemap("""
+            nivel
+            """))
+        tiles.place_on_tile(nena, tiles.get_tile_location(10, 6))
+        llaveEncontrada = False
+sprites.on_overlap(SpriteKind.player, SpriteKind.Decoracion, on_on_overlap4)
 
 def hablarConSabio():
     global hablandoConSabio, respuesta, misionSabioActiva, puede_hablar_herrero
@@ -339,8 +425,7 @@ def hablarConSabio():
             DialogLayout.BOTTOM)
         game.show_long_text("El Alquimista Valerio desapareció hace años...",
             DialogLayout.BOTTOM)
-        game.show_long_text("El Alquimista dejó tres llaves ocultas.",
-            DialogLayout.BOTTOM)
+        game.show_long_text("Y dejó tres llaves ocultas.", DialogLayout.BOTTOM)
         game.show_long_text("La primera está con el herrero Bron.", DialogLayout.BOTTOM)
         game.show_long_text("Ve a verlo. Está al otro lado del pueblo.",
             DialogLayout.BOTTOM)
@@ -353,14 +438,26 @@ def hablarConSabio():
     else:
         game.show_long_text("Sabio: ¿Ya lo encontrase?", DialogLayout.BOTTOM)
 def limpiarMonstruos():
-    global monstruosEnMapa, barras
-    for i in range(len(monstruosEnMapa)):
+    global i, monstruosEnMapa, barras
+    while i <= len(monstruosEnMapa) - 1:
         sprites.destroy(monstruosEnMapa[i])
         sprites.destroy(barras[i])
+        i += 1
     monstruosEnMapa = []
     barras = []
+
+def on_hit_wall(proyectil2, location):
+    sprites.destroy(proyectil2)
+scene.on_hit_wall(SpriteKind.projectile, on_hit_wall)
+
+def activarPortal():
+    global portal
+    portal = sprites.create(assets.image("""
+        portal
+        """), SpriteKind.Decoracion)
+    tiles.place_on_tile(portal, tiles.get_tile_location(35, 5))
 def crearMapa():
-    global misionSabioActiva, hablandoConSabio, diarioEncontrado, sabio, lyra, nena, herrero, casaSabio, arbol1, arbol2, arbol3, casaHerrero
+    global misionSabioActiva, hablandoConSabio, diarioEncontrado, sabio, lyra, nena, herrero, guardian, casaSabio, arbol1, arbol2, arbol3, casaHerrero
     misionSabioActiva = False
     hablandoConSabio = 0
     diarioEncontrado = False
@@ -376,6 +473,33 @@ def crearMapa():
     herrero = sprites.create(assets.image("""
         herrero
         """), SpriteKind.NPC)
+    guardian = sprites.create(img("""
+            ......ffff..............
+            ....fffb1fff............
+            ...fffbbb1fff...........
+            ..fff1bb1b1fff..........
+            ..ff1bbbbbb11f..........
+            ..fbbffffffb1f..........
+            ..ffffeeeeffff......ccc.
+            .ffefbf44fbfeff....cddc.
+            .ffefbf44fbfeff...cddc..
+            .fee4dddddd4eef.ccddc...
+            fdfeeddddd4eeffecddc....
+            fbffee4444ee4fddccc.....
+            fbf4fb1bbb1f1edde.......
+            fcf.fbbb1bbf44ee........
+            .ff.f445544f............
+            ....ffffffff............
+            .....ff..ff.............
+            ........................
+            ........................
+            ........................
+            ........................
+            ........................
+            ........................
+            ........................
+            """),
+        SpriteKind.NPC)
     casaSabio = sprites.create(img("""
             ....................e4e44e4e....................
             .................444eee44e4e444.................
@@ -528,6 +652,7 @@ def crearMapa():
     tiles.place_on_tile(sabio, tiles.get_tile_location(3, 3))
     tiles.place_on_tile(casaSabio, tiles.get_tile_location(3, 1))
     tiles.place_on_tile(herrero, tiles.get_tile_location(14, 3))
+    tiles.place_on_tile(guardian, tiles.get_tile_location(33, 5))
     tiles.place_on_tile(casaHerrero, tiles.get_tile_location(14, 1))
     tiles.place_on_tile(lyra, tiles.get_tile_location(3, 21))
     tiles.place_on_tile(nena, tiles.get_tile_location(3, 5))
@@ -733,8 +858,11 @@ arbol3: Sprite = None
 arbol2: Sprite = None
 arbol1: Sprite = None
 casaSabio: Sprite = None
+guardian: Sprite = None
+i = 0
 hablandoConSabio = 0
 misionSabioActiva = False
+portal: Sprite = None
 objeto: Sprite = None
 mineral3: Sprite = None
 mineral2: Sprite = None
@@ -743,8 +871,12 @@ hablandoConHerrero = 0
 minerales_recogidos = 0
 misionHerreroActiva = False
 puede_hablar_herrero = False
-proyectil2: Sprite = None
+proyectil22: Sprite = None
 diarioEncontrado = False
+hablandoConGuardian = 0
+llaveEncontrada = False
+misionGuardianActiva = False
+puede_hablar_guardian = False
 respuesta = False
 hablandoConLyra = 0
 misionLyraActiva = False
@@ -754,16 +886,17 @@ monstruo: Sprite = None
 direccionNena = ""
 nena: Sprite = None
 diario: Sprite = None
+cofre: Sprite = None
 lyra: Sprite = None
 herrero: Sprite = None
 sabio: Sprite = None
 monstruos_matados2 = 0
 barras: List[StatusBarSprite] = []
+monstruosEnMapa: List[Sprite] = []
+k = 0
+enemy_index = 0
 j = 0
 enemy_index2 = 0
-enemy_index = 0
-i = 0
-monstruosEnMapa: List[Sprite] = []
 scene.set_background_image(img("""
     7777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777
     7777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777

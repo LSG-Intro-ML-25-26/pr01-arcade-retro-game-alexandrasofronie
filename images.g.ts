@@ -179,6 +179,42 @@ f f f c 3 c c c c 3 c f f f
 .......ffddf....
 .........ccf....
 `;
+            case "image6":
+            case "portal":return img`
+..ccccc....666.....666...ccccc...
+.c66b66c..68886...68886.c66b66c..
+c6b66bb6c68888866688888c6bb66b6c.
+c66b66b6c88111888881118c6b66b66c.
+cb66b66bc81888188818881cb66b66bc.
+c6b66bbbcb88a881118888bcbbb66b6c.
+c6bb6bbd1baaaaaaaaaaa8b1dbb6bb6c.
+.c66bbd1baa8888888888aab1dbb66c..
+..cccc1baa888aaaa88888aab1cccc...
+.6881bbaa88aaa88aaaaaa88abb886...
+688188aa88aa888888888aa8aa81886..
+68818aa8aa888888888888aa8a881886.
+68818a88a8888aaaaa88888a8a881886.
+.6881a8aa888aa888aa8888a8a881886.
+..68818a888aa888888a888a8a81886..
+..68818a88aa8888888a888a8a1886...
+..6881aa88a8888888aa888a8a1886...
+.68818a888a8888aaaa8888a8a1886...
+688188a888a888888888888a8a81886..
+6881888a88aa8888888888aa8aa81886.
+6881888aa88a888888888aa88aa81886.
+.6881888a88aaa888888aa88aa881886.
+..688bb8aa888aaaaaaaa88aabb1886..
+..cccc1b88a8888888888aa8b1cccc...
+.c66bbd1b8aaaaa8888aaa8b1dbb66c..
+c6bb6bbd1b8888aaaaa888b1dbb6bb6c.
+c6b66bbbcb888811188888bcbbb66b6c.
+cb66b66bc18881888188818cb66b66bc.
+c66b66b6c81118888811188c6b66b66c.
+c6b66bb6c88888666888886c6bb66b6c.
+.c66b66c.68886...68886..c66b66c..
+..ccccc...666.....666....ccccc...
+.................................
+`;
         }
         return null;
     })

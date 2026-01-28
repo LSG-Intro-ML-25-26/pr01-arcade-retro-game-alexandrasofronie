@@ -39,6 +39,11 @@
         "mimeType": "image/x-mkcd-f4",
         "displayName": "swampTree1"
     },
+    "image6": {
+        "data": "hwQhACEAAAAAzMwMAGYGAABmBgDAzMwAAAAAAMBma8ZgiGgAYIhoAGy2ZgwAAAAAbGu2a4yIiGaGiIjGtmu2xgAAAABstmZrjBGBiIgRgci2ZmvGAAAAALxma7YciBiIGIgYyGu2ZssAAAAAbGu2u7yoqhGBiIjLu2u2xgAAAABsu7bbsaqIiKqKiBu9a7vGAAAAAMBmux2riqiqiqiKuNG7ZgwAAAAAAMzMsaqoqoiIiKqKG8zMAAAAAAAAhririqiIiIiIiIq4G4gGAAAAAGCIgaqIioioqqqIqIqIgWgAAAAAhhiIiqiKiKqIqKqIioiBaAAAAACGGKiKqIioioiIqIiKiIFoAAAAAIYYiIqqiKqIiIioiooYiAYAAAAAYIiBioqIioiIiIiKqoFoAAAAAAAAhhiKioiKiKiIiIqogWgAAAAAAACGGIqqiIqIqIiIiqiBaAAAAAAAAIYYiqiIqoioiIiKqBiIBgAAAABgiIGKqIioiKqIiIqoiIFoAAAAAIYYiIqoiIiqioiIioqIgWgAAAAAhhiIiqiIiIiIiKiKioiBaAAAAACGGIioqIqIiIiIqqiKGIgGAAAAAGCIsauKqoiIiKiKqLiLaAAAAAAAAMzMsYqoqqqqqoiKG8zMAAAAAADAZrsdq4qIiIiIqLrRu2YMAAAAAGy7ttuxqqqqqqqqG71ru8YAAAAAbGu2u7yIiBgRqIrLu2u2xgAAAAC8Zmu2jIGIgYiBiMFrtmbLAAAAAGy2ZmuMGBGIiBgRyLZma8YAAAAAbGu2a2yIiGhmiIjItmu2xgAAAADAZmvGAIaIBgCGiAZstmYMAAAAAADMzAwAYGYAAGBmAMDMzAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+        "mimeType": "image/x-mkcd-f4",
+        "displayName": "portal"
+    },
     "anim4": {
         "namespace": "myAnimations",
         "id": "anim4",
